@@ -1,0 +1,63 @@
+/* Reset i ustawienia globalne */
+* {
+    box-sizing: border-box;
+}
+
+body {
+    padding: 20px;
+    font-family: Arial, sans-serif;
+}
+
+/* (b) Kontener zapewniający automatyczne rozmieszczenie i zawijanie wierszy */
+.button-container {
+    display: flex;
+    flex-wrap: wrap;    /* Pozwala przyciskom przeskakiwać do nowej linii */
+    gap: 10px;          /* (c) Odstęp 10px między elementami */
+    justify-content: flex-start; /* (c) Miejsce począwszy od lewej strony */
+    max-width: 100%;
+}
+
+/* Usuwanie natywnych stylów przeglądarki i definiowanie wyglądu */
+.btn {
+    /* Reset stylów */
+    appearance: none;
+    background: transparent;
+    border: none;
+    margin: 0;
+    padding: 0;
+    font: inherit;
+    outline: none;
+
+    /* (a) Jednakowa, ustalona szerokość */
+    width: 360px;
+    
+    /* (d) Wygląd przycisku: ramka niebieskawa i zaokrąglone rogi */
+    border: 1px solid #abdceb;
+    border-radius: 8px;
+    padding: 12px 20px;
+    
+    /* Układ ikona + tekst */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #444;
+    background-color: #fff;
+    transition: color 0.3s ease, box-shadow 0.2s ease;
+}
+
+/* Odstęp ikony od etykiety */
+.btn i {
+    margin-right: 10px;
+    font-size: 1.2rem;
+}
+
+/* (e) Po najechaniu kursorem */
+.btn:hover {
+    cursor: pointer;        /* Zmiana kształtu kursora */
+    color: #4da6ff;        /* Zmiana koloru etykiety i ikony */
+}
+
+/* (f) Stan "focus" (klawisz TAB lub kliknięcie) - zaznaczenie cieniem */
+.btn:focus {
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15); /* Miękki cień wokół przycisku */
+}

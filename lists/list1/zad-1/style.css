@@ -1,0 +1,49 @@
+/* (i) Ustawienie box-sizing na border-box dla wszystkich elementów */
+* {
+    box-sizing: border-box;
+}
+
+/* (a) Krój pisma bezszeryfowy oraz (c) jasnoszare tło dla marginesów strony */
+body {
+    font-family: sans-serif;
+    background-color: #f0f0f0; /* Jasnoszary kolor tła */
+    margin: 0;
+    padding: 0;
+}
+
+/* (b, c) Maksymalna szerokość, biały obszar i centrowanie */
+/* (f, g) Marginesy wewnętrzne tekstu: 2em góra/dół, 3em boki */
+article {
+    max-width: 1024px;
+    margin: 0 auto;       /* Centrowanie na środku ekranu */
+    background-color: #ffffff;
+    padding: 2em 3em;     /* 2em góra/dół, 3em boki */
+    min-height: 100vh;
+}
+
+/* (h) Zróżnicowanie wielkości nagłówków zgodnie z semantyką */
+h1 { font-size: 2.5em; margin-top: 0; }
+h2 { font-size: 1.8em; }
+h3 { font-size: 1.3em; }
+
+/* (e) Odstępy między rozdziałami */
+section.chapter {
+    margin-bottom: 3em;
+}
+
+/* Odstęp dla podrozdziału (również traktowany jako sekcja/rozdział) */
+section.sub-chapter {
+    margin-top: 2em;
+    margin-bottom: 3em;
+}
+
+/* (d) Odstępy między paragrafami */
+p {
+    margin-bottom: 2em;
+    line-height: 1.5;
+}
+
+/* Usuwamy margines z ostatniego elementu, aby nie dodawał się do paddingu article */
+p:last-child {
+    margin-bottom: 0;
+}

@@ -1,0 +1,64 @@
+/* Reset i podstawowe ustawienia */
+* {
+    box-sizing: border-box;
+}
+
+html, body {
+    margin: 0;
+    padding: 0;
+    height: 100%;       /* Konieczne, by kontener wypełnił ekran */
+    font-family: sans-serif;
+    overflow: hidden;   /* (d) Brak paska przewijania całej strony */
+}
+
+body {
+    display: flex;
+    flex-direction: column;
+    min-width: 240px;    /* (f) Minimalna szerokość okna */
+}
+
+/* (e) Element tytułowy - wysokość 70px */
+.top-bar {
+    height: 70px;
+    width: 100%;
+    background-color: #e0e0e0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-bottom: 1px solid #ccc;
+    flex-shrink: 0;      /* Zapobiega zgniataniu headera */
+}
+
+/* Kontener dla części dolnej (sidebar + content) */
+.main-container {
+    display: flex;
+    flex: 1;             /* Zajmuje całą pozostałą wysokość */
+    overflow: hidden;    /* Zapobiega wypływaniu zawartości */
+}
+
+/* (e) Spis treści - szerokość 120px */
+.sidebar {
+    width: 120px;
+    background-color: #f5f5f5;
+    border-right: 1px solid #ccc;
+    padding: 15px;
+    flex-shrink: 0;      /* Szerokość zawsze zostaje 120px */
+}
+
+/* (a, b, c) Zawartość artykułu */
+.content {
+    flex: 1;             /* Automatyczne dostosowanie szerokości */
+    padding: 20px;
+    background-color: #fff;
+    
+    /* Kluczowe parametry przewijania */
+    overflow-y: auto;    /* (b) Scroller tylko gdy potrzebny */
+    overflow-x: hidden;
+    height: 100%;        /* Przewija się w obrębie tego elementu */
+}
+
+/* Stylowanie tekstu wewnątrz artykułu */
+.content p {
+    margin-bottom: 1.5em;
+    line-height: 1.6;
+}

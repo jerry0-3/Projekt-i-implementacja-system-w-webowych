@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Zadanie 1 - Koło i suwak</title>
+    <style>
+        body {
+            font-family: sans-serif;
+            margin: 40px;
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 20px;
+        }
+
+        /* Stylizacja suwaka */
+        #sizeSlider {
+            width: 250px;
+            cursor: pointer;
+        }
+
+        /* Stylizacja koła */
+        #circle {
+            /* Fioletowe obramowanie */
+            border: 5px solid #8A2BE2; 
+            border-radius: 50%;
+            
+            /* Wyśrodkowanie tekstu w pionie i poziomie */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            
+            font-family: serif; 
+            color: #000;
+            
+            /* (e) Płynne animacje rozmiaru i koloru */
+            transition: width 0.15s ease-out, height 0.15s ease-out, background-color 0.15s ease-out;
+            
+            /* Zapobiega zawijaniu tekstu przy bardzo małych rozmiarach */
+            white-space: nowrap; 
+            overflow: hidden;
+        }
+    </style>
+</head>
+<body>
+
+    <input type="range" id="sizeSlider" min="10" max="500" value="74">
+    
+    <div id="circle"></div>
+
+    <script>
+        // Pobranie elementów DOM
+        const slider = document.getElementById('sizeSlider');
+        const circle = document.getElementById('circle');
+
+        // Główna funkcja aktualizująca wygląd koła
+        function updateCircle() {
+            // Pobranie aktualnej wartości suwaka
+            const size = parseInt(slider.value, 10);
+
+            // (b), (c) Dynamiczna zmiana średnicy koła
+            circle.style.width = size + 'px';
+            circle.style.height = size + 'px';
+
+            // (d) Wyświetlanie średnicy wewnątrz koła
+            circle.textContent = size + 'px';
+
+            // (f) Efekt kolorystyczny - większe koło jest jaśniejsze.
+            // Używamy modelu HSL: Barwa (Hue) = 60 (żółty), Nasycenie = 100%.
+            // Jasność (Lightness) skalujemy od 40% (dla 10px) do 85% (dla 500px).
+            const minLightness = 40;
+            const maxLightness = 85;
+            const lightness = minLightness + ((size - 10) / 490) * (maxLightness - minLightness);
+            
+            circle.style.backgroundColor = `hsl(60, 100%, ${lightness}%)`;
+        }
+
+        // (c) Nasłuchiwanie na zdarzenie 'input' pozwala na dynamiczną zmianę podczas przesuwania
+        slider.addEventListener('input', updateCircle);
+
+        // (g) Obsługa sterowania klawiaturą
+        document.addEventListener('keydown', function(event) {
+            // Skok o 10 pikseli przy każdym naciśnięciu strzałki
+            const step = 10; 
+            
+            // Unikamy podwójnego działania, jeśli suwak ma focus
+            if (document.activeElement !== slider) {
+                if (event.key === 'ArrowLeft') {
+                    slider.stepDown(step);
+                    updateCircle();
+                } else if (event.key === 'ArrowRight') {
+                    slider.stepUp(step);
+                    updateCircle();
+                }
+            }
+        });
+
+        // Wywołanie funkcji na starcie, aby zainicjować odpowiedni wygląd i tekst
+        updateCircle();
+    </script>
+</body>
+</html>

@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Zadanie 3 - Notatnik</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        .note-item {
+            cursor: pointer;
+            color: #0d6efd;
+            text-decoration: none;
+        }
+        .note-item:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container mt-5">
+    <div class="row">
+        <div class="col-md-4 mb-4">
+            <h3 class="mb-3">Notes</h3>
+            <ul id="notesList" class="list-unstyled mb-4">
+            </ul>
+
+            <hr>
+            <div class="d-grid gap-2">
+                <button id="exportBtn" class="btn btn-outline-secondary btn-sm">Eksportuj notatki (JSON)</button>
+                <label for="importFile" class="btn btn-outline-secondary btn-sm mb-0">Importuj notatki (JSON)</label>
+                <input type="file" id="importFile" accept=".json" style="display: none;">
+            </div>
+        </div>
+
+        <div class="col-md-8">
+            <h3 id="formTitle" class="mb-3">Nowa notatka</h3>
+            <form id="noteForm">
+                <div class="mb-3">
+                    <label for="noteName" class="form-label text-muted">Name</label>
+                    <input type="text" class="form-control" id="noteName" required>
+                </div>
+                
+                <div class="mb-3">
+                    <label for="noteContent" class="form-label text-muted">Content</label>
+                    <textarea class="form-control" id="noteContent" rows="10"></textarea>
+                </div>
+
+                <button type="submit" class="btn btn-primary">Save</button>
+                <button type="button" id="cancelEditBtn" class="btn btn-light d-none">Anuluj edycję</button>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script>
+    /**
+     * MODEL: Reprezentuje pojedynczą notatkę.
+     * Generuje unikalny identyfikator (UUID bazujący na czasie), rozwiązując problem nieunikalnych tytułów.
+     */
+    class Note {
+        constructor(title, content, id = null) {
+            this.id = id || this.generateId();
+            this.title = title;
+            this.content = content;
+        }
+
+        generateId() {
+            return Date.now().toString(36) + Math.random().toString(36).substring(2);
+        }
+    }
+
+    /**
+     * SERWIS: Mechanizm utrwalania (Persistence Layer).
+     * Odpowiada wyłącznie za komunikację z localStorage.
+     */
+    class StorageManager {
+        static STORAGE_KEY = 'my_notes_app_data';
+
+        static save(notesArray) {
+            localStorage.setItem(this.STORAGE_KEY, JSON.stringify(notesArray));
+        }
+
+        static load() {
+            const data = localStorage.getItem(this.STORAGE_KEY);
+            return data ? JSON.parse(data) : [];
+        }
+    }
+
+    /**
+     * SERWIS: Zarządza stanem aplikacji i operacjami logicznymi (CRUD).
+     * Odseparowany od widoku. W pamięci trzyma aktualną listę obiektów Note.
+     */
+    class NoteService {
+        constructor() {
+            this.notes = [];
+            this.loadFromStorage();
+        }
+
+        loadFromStorage() {
+            const rawData = StorageManager.load();
+            this.notes = rawData.map(item => new Note(item.title, item.content, item.id));
+        }
+
+        saveToStorage() {
+            StorageManager.save(this.notes);
+        }
+
+        addNote(title, content) {
+            const newNote = new Note(title, content);
+            this.notes.push(newNote);
+            this.saveToStorage();
+        }
+
+        updateNote(id, title, content) {
+            const noteIndex = this.notes.findIndex(n => n.id === id);
+            if (noteIndex !== -1) {
+                this.notes[noteIndex].title = title;
+                this.notes[noteIndex].content = content;
+                this.saveToStorage();
+            }
+        }
+
+        getNoteById(id) {
+            return this.notes.find(n => n.id === id);
+        }
+
+        getAllNotes() {
+            return this.notes;
+        }
+
+        exportData() {
+            return JSON.stringify(this.notes, null, 2);
+        }
+
+        importData(jsonData) {
+            try {
+                const parsed = JSON.parse(jsonData);
+                if (Array.isArray(parsed)) {
+                    this.notes = parsed.map(item => new Note(item.title, item.content, item.id));
+                    this.saveToStorage();
+                    return true;
+                }
+            } catch (error) {
+                console.error("Błąd parsowania JSON:", error);
+            }
+            return false;
+        }
+    }
+
+    /**
+     * KONTROLER/WIDOK: Zarządza interakcjami DOM i aktualizuje UI.
+     */
+    class AppController {
+        constructor(noteService) {
+            this.noteService = noteService;
+            this.currentEditId = null; // null oznacza tryb tworzenia, string oznacza tryb edycji
+
+            // Elementy DOM
+            this.form = document.getElementById('noteForm');
+            this.inputName = document.getElementById('noteName');
+            this.inputContent = document.getElementById('noteContent');
+            this.notesListEl = document.getElementById('notesList');
+            this.formTitle = document.getElementById('formTitle');
+            this.cancelEditBtn = document.getElementById('cancelEditBtn');
+            this.exportBtn = document.getElementById('exportBtn');
+            this.importInput = document.getElementById('importFile');
+
+            this.bindEvents();
+            this.renderList();
+        }
+
+        bindEvents() {
+            // Obsługa zapisu formularza
+            this.form.addEventListener('submit', (e) => this.handleSave(e));
+            
+            // Obsługa wyjścia z trybu edycji
+            this.cancelEditBtn.addEventListener('click', () => this.resetForm());
+
+            // Eksport i import
+            this.exportBtn.addEventListener('click', () => this.handleExport());
+            this.importInput.addEventListener('change', (e) => this.handleImport(e));
+        }
+
+        handleSave(event) {
+            event.preventDefault();
+            
+            const title = this.inputName.value.trim();
+            const content = this.inputContent.value;
+
+            if (this.currentEditId) {
+                // Tryb edycji
+                this.noteService.updateNote(this.currentEditId, title, content);
+            } else {
+                // Tryb tworzenia
+                this.noteService.addNote(title, content);
+            }
+
+            this.resetForm();
+            this.renderList();
+        }
+
+        editNote(id) {
+            const note = this.noteService.getNoteById(id);
+            if (!note) return;
+
+            // Przełączenie stanu aplikacji w tryb edycji
+            this.currentEditId = note.id;
+            this.inputName.value = note.title;
+            this.inputContent.value = note.content;
+            
+            this.formTitle.textContent = 'Edit note';
+            this.cancelEditBtn.classList.remove('d-none');
+        }
+
+        resetForm() {
+            // Resetowanie stanu do trybu "Nowa notatka"
+            this.currentEditId = null;
+            this.form.reset();
+            this.formTitle.textContent = 'Nowa notatka';
+            this.cancelEditBtn.classList.add('d-none');
+        }
+
+        renderList() {
+            this.notesListEl.innerHTML = '';
+            const notes = this.noteService.getAllNotes();
+
+            notes.forEach(note => {
+                const li = document.createElement('li');
+                li.className = 'mb-1';
+                li.innerHTML = `• <span class="note-item" data-id="${note.id}">${note.title}</span>`;
+                
+                // Nasłuchujemy na kliknięcie konkretnej notatki
+                li.querySelector('.note-item').addEventListener('click', (e) => {
+                    this.editNote(e.target.dataset.id);
+                });
+
+                this.notesListEl.appendChild(li);
+            });
+        }
+
+        handleExport() {
+            const jsonString = this.noteService.exportData();
+            const blob = new Blob([jsonString], { type: "application/json" });
+            const url = URL.createObjectURL(blob);
+            
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'notatki.json';
+            a.click();
+            URL.revokeObjectURL(url);
+        }
+
+        handleImport(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                const success = this.noteService.importData(e.target.result);
+                if (success) {
+                    this.resetForm();
+                    this.renderList();
+                    alert("Notatki zaimportowano pomyślnie.");
+                } else {
+                    alert("Błąd importu. Niewłaściwy plik JSON.");
+                }
+                this.importInput.value = ''; // Reset inputa file
+            };
+            reader.readAsText(file);
+        }
+    }
+
+    // Inicjalizacja aplikacji po załadowaniu drzewa DOM
+    document.addEventListener('DOMContentLoaded', () => {
+        const noteService = new NoteService();
+        const app = new AppController(noteService);
+    });
+</script>
+</body>
+</html>

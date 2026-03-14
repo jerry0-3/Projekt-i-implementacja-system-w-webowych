@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Zadanie 2 - Formularze i walidacja</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            background-color: #f0f8ff;
+            padding: 20px;
+        }
+        .container {
+            background-color: #ffffff;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.05);
+            max-width: 800px;
+            margin: auto;
+        }
+        /* Prawy margines dla nagłówków tabeli */
+        .num-col {
+            text-align: right;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h2 class="mb-4">Please enter package and dimensions</h2>
+    
+    <form id="packageForm" class="needs-validation" novalidate>
+        
+        <div class="mb-3">
+            <label for="pkgName" class="form-label text-muted">Name</label>
+            <input type="text" class="form-control" id="pkgName" maxlength="20" required>
+            <div class="invalid-feedback">
+                Proszę podać nazwę (maksymalnie 20 znaków).
+            </div>
+        </div>
+
+        <div class="mb-3">
+            <label for="pkgWidth" class="form-label text-muted">Width</label>
+            <div class="input-group">
+                <input type="number" class="form-control" id="pkgWidth" min="1" max="1000" step="1" required>
+                <span class="input-group-text">cm</span>
+                <div class="invalid-feedback">
+                    Proszę wprowadzić poprawną liczbę z zakresu 1 - 1000.
+                </div>
+            </div>
+        </div>
+
+        <div class="mb-3">
+            <label for="pkgHeight" class="form-label text-muted">Height</label>
+            <div class="input-group">
+                <input type="number" class="form-control" id="pkgHeight" min="1" max="1000" step="1" required>
+                <span class="input-group-text">cm</span>
+                <div class="invalid-feedback">
+                    Proszę wprowadzić poprawną liczbę z zakresu 1 - 1000.
+                </div>
+            </div>
+        </div>
+
+        <div class="mb-4">
+            <label for="pkgDepth" class="form-label text-muted">Depth</label>
+            <div class="input-group">
+                <input type="number" class="form-control" id="pkgDepth" min="1" max="1000" step="1" required>
+                <span class="input-group-text">cm</span>
+                <div class="invalid-feedback">
+                    Proszę wprowadzić poprawną liczbę z zakresu 1 - 1000.
+                </div>
+            </div>
+        </div>
+
+        <button type="submit" class="btn btn-primary">Confirm</button>
+        <button type="reset" class="btn btn-secondary">Clear</button>
+    </form>
+
+    <h2 class="mt-5 mb-3">Packages</h2>
+
+    <div class="mb-3">
+        <input type="text" class="form-control" id="searchInput" placeholder="Search packages by name...">
+    </div>
+
+    <table class="table table-borderless table-hover" style="border-top: 2px solid #000; border-bottom: 2px solid #000;">
+        <thead>
+            <tr style="border-bottom: 1px solid #000;">
+                <th>Name</th>
+                <th class="num-col">Width</th>
+                <th class="num-col">Height</th>
+                <th class="num-col">Depth</th>
+                <th class="num-col">Volume</th>
+            </tr>
+        </thead>
+        <tbody id="packageTableBody">
+        </tbody>
+        <tfoot>
+            <tr style="border-top: 1px solid #000;">
+                <td colspan="4"></td>
+                <td class="num-col fw-bold" id="totalVolume">0.00</td>
+            </tr>
+        </tfoot>
+    </table>
+</div>
+
+<script>
+    // Tablica przechowująca wszystkie dodane paczki
+    let packages = [];
+
+    // Elementy DOM
+    const form = document.getElementById('packageForm');
+    const searchInput = document.getElementById('searchInput');
+    const tableBody = document.getElementById('packageTableBody');
+    const totalVolumeEl = document.getElementById('totalVolume');
+
+    // Obsługa dodawania (Submit) formularza z walidacją Bootstrap
+    form.addEventListener('submit', function (event) {
+        event.preventDefault(); // Zatrzymuje domyślne przeładowanie strony
+        
+        // (c) Inicjacja walidacji (sprawdza czy pola spełniają warunki HTML5)
+        if (!form.checkValidity()) {
+            event.stopPropagation();
+            form.classList.add('was-validated');
+            return; // Przerywa jeśli są błędy
+        }
+
+        // Jeśli walidacja przeszła, pobieramy dane
+        const name = document.getElementById('pkgName').value;
+        const width = parseInt(document.getElementById('pkgWidth').value, 10);
+        const height = parseInt(document.getElementById('pkgHeight').value, 10);
+        const depth = parseInt(document.getElementById('pkgDepth').value, 10);
+
+        // (e) Obliczenie objętości w m³ (1 m³ = 1 000 000 cm³)
+        const volume = (width * height * depth) / 1000000;
+
+        // Dodanie nowego obiektu paczki do tablicy
+        packages.push({
+            name: name,
+            width: width,
+            height: height,
+            depth: depth,
+            volume: volume
+        });
+
+        // Czyszczenie formularza i resetowanie klas walidacyjnych po poprawnym dodaniu
+        form.reset();
+        form.classList.remove('was-validated');
+
+        // Odświeżenie widoku tabeli
+        renderTable();
+    });
+
+    // (d) Obsługa przycisku Clear - czyszczenie komunikatów błędu
+    form.addEventListener('reset', function () {
+        form.classList.remove('was-validated');
+    });
+
+    // (g) Nasłuchiwanie na wpisywanie tekstu do pola wyszukiwarki
+    searchInput.addEventListener('input', function() {
+        renderTable();
+    });
+
+    // Funkcja generująca wiersze w tabeli
+    function renderTable() {
+        tableBody.innerHTML = '';
+        const filterText = searchInput.value.toLowerCase();
+        let currentTotalVolume = 0;
+
+        // Filtrowanie paczek na podstawie wprowadzonego tekstu
+        const filteredPackages = packages.filter(pkg => 
+            pkg.name.toLowerCase().includes(filterText)
+        );
+
+        // Tworzenie wierszy
+        filteredPackages.forEach(pkg => {
+            const tr = document.createElement('tr');
+            
+            tr.innerHTML = `
+                <td>${pkg.name}</td>
+                <td class="num-col">${pkg.width}</td>
+                <td class="num-col">${pkg.height}</td>
+                <td class="num-col">${pkg.depth}</td>
+                <td class="num-col">${pkg.volume.toFixed(2)}</td>
+            `;
+            
+            tableBody.appendChild(tr);
+        });
+
+        // Obliczanie całkowitej objętości ze wszystkich paczek wprowadzonych do systemu
+        packages.forEach(pkg => {
+            currentTotalVolume += pkg.volume;
+        });
+
+        // (e) Aktualizacja sumy w stopce z zaokrągleniem do 2 miejsc
+        totalVolumeEl.textContent = currentTotalVolume.toFixed(2);
+    }
+</script>
+</body>
+</html>

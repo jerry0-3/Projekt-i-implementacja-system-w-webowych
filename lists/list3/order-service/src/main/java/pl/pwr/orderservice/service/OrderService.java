@@ -2,6 +2,7 @@ package pl.pwr.orderservice.service;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import pl.pwr.orderservice.client.OrderHistoryClient;
 import pl.pwr.orderservice.model.DeliveryStatus;
 import pl.pwr.orderservice.model.Order;
 import pl.pwr.orderservice.repository.OrderRepository;
@@ -10,9 +11,11 @@ import pl.pwr.orderservice.repository.OrderRepository;
 public class OrderService {
 
     private final OrderRepository orderRepository;
+    private final OrderHistoryClient orderHistoryClient;
 
-    public OrderService(OrderRepository orderRepository) {
+    public OrderService(OrderRepository orderRepository, OrderHistoryClient orderHistoryClient) {
         this.orderRepository = orderRepository;
+        this.orderHistoryClient = orderHistoryClient;
     }
 
     @Transactional
@@ -27,7 +30,12 @@ public class OrderService {
             order.getDelivery().setStatus(DeliveryStatus.CREATED);
         }
 
-        return orderRepository.save(order);
+        Order savedOrder = orderRepository.save(order);
+
+        // Synchronizacja: wysłanie danych do drugiego mikroserwisu
+        orderHistoryClient.syncNewOrder(savedOrder);
+
+        return savedOrder;
     }
 
     @Transactional
@@ -43,6 +51,11 @@ public class OrderService {
             throw new RuntimeException("Zamówienie nie ma przypisanej dostawy.");
         }
 
-        return orderRepository.save(order);
+        Order updatedOrder = orderRepository.save(order);
+
+        // Synchronizacja: wysłanie zmiany statusu do drugiego mikroserwisu
+        orderHistoryClient.syncDeliveryStatus(orderId, newStatus);
+
+        return updatedOrder;
     }
 }

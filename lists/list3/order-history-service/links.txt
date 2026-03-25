@@ -1,0 +1,2 @@
+sync-api.json => http://localhost:8081/v3/api-docs/sync
+HATEOAS => http://localhost:8081/ordershistory/paged?page=0&size=1

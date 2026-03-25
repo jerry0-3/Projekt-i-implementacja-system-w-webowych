@@ -1,6 +1,8 @@
 package pl.pwr.orderhistory.service;
 
 import org.springframework.stereotype.Service;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import pl.pwr.orderhistory.model.OrderHistory;
 import pl.pwr.orderhistory.repository.OrderHistoryRepository;
 
@@ -34,5 +36,10 @@ public class OrderHistoryService {
 
     public List<OrderHistory> getAllOrderHistory() {
         return orderHistoryRepository.findAll();
+    }
+
+    public Page<OrderHistory> getOrderHistoryPaged(Pageable pageable) {
+        // Interfejs JpaRepository dziedziczy po PagingAndSortingRepository, więc findAll(Pageable) jest dostępne od razu!
+        return orderHistoryRepository.findAll(pageable);
     }
 }

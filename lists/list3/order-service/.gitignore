@@ -31,3 +31,8 @@ build/
 
 ### VS Code ###
 .vscode/
+
+# Ignorowane pliki bazy danych H2
+data/
+*.mv.db
+*.trace.db

@@ -15,17 +15,17 @@ import java.util.stream.Collectors;
 public class OrderService {
 
     private final OrderRepository orderRepository;
-    // private final OrderHistoryClient orderHistoryClient;
-    private final OrderHistoryCommandControllerApi historyApi; // WYGENEROWANY KLIENT!
+    private final OrderHistoryClient orderHistoryClient;
+    // private final OrderHistoryCommandControllerApi historyApi; // WYGENEROWANY KLIENT!
 
-//    public OrderService(OrderRepository orderRepository, OrderHistoryClient orderHistoryClient) {
-//        this.orderRepository = orderRepository;
-//        this.orderHistoryClient = orderHistoryClient;
-//    }
-    public OrderService(OrderRepository orderRepository, OrderHistoryCommandControllerApi historyApi) {
+    public OrderService(OrderRepository orderRepository, OrderHistoryClient orderHistoryClient) {
         this.orderRepository = orderRepository;
-        this.historyApi = historyApi;
+        this.orderHistoryClient = orderHistoryClient;
     }
+//    public OrderService(OrderRepository orderRepository, OrderHistoryCommandControllerApi historyApi) {
+//        this.orderRepository = orderRepository;
+//        this.historyApi = historyApi;
+//    }
 
     @Transactional
     public Order createOrder(Order order) {
@@ -42,27 +42,27 @@ public class OrderService {
         Order savedOrder = orderRepository.save(order);
 
         // Synchronizacja: wysłanie danych do drugiego mikroserwisu
-        // orderHistoryClient.syncNewOrder(savedOrder);
+        orderHistoryClient.syncNewOrder(savedOrder);
 
         // Transformacja do wygenerowanego modelu
-        pl.pwr.orderservice.generated.model.OrderHistory generatedHistory = new pl.pwr.orderservice.generated.model.OrderHistory();
-        generatedHistory.setOrderId(savedOrder.getId());
-        generatedHistory.setCustomerName(savedOrder.getCustomerName());
-        generatedHistory.setCourierName(savedOrder.getDelivery() != null ? savedOrder.getDelivery().getCourierName() : "Brak");
-        generatedHistory.setDeliveryStatus(savedOrder.getDelivery() != null ? savedOrder.getDelivery().getStatus().name() : "CREATED");
-
-        String products = savedOrder.getItems().stream()
-                .map(item -> item.getProduct().getName())
-                .collect(Collectors.joining(", "));
-        generatedHistory.setProductNames(products);
-
-        BigDecimal total = savedOrder.getItems().stream()
-                .map(item -> item.getProduct().getPrice().multiply(new BigDecimal(item.getQuantity())))
-                .reduce(BigDecimal.ZERO, BigDecimal::add);
-        generatedHistory.setTotalPrice(total);
-
-        // Wywołanie API za pomocą wygenerowanego klienta
-        historyApi.create(generatedHistory);
+//        pl.pwr.orderservice.generated.model.OrderHistory generatedHistory = new pl.pwr.orderservice.generated.model.OrderHistory();
+//        generatedHistory.setOrderId(savedOrder.getId());
+//        generatedHistory.setCustomerName(savedOrder.getCustomerName());
+//        generatedHistory.setCourierName(savedOrder.getDelivery() != null ? savedOrder.getDelivery().getCourierName() : "Brak");
+//        generatedHistory.setDeliveryStatus(savedOrder.getDelivery() != null ? savedOrder.getDelivery().getStatus().name() : "CREATED");
+//
+//        String products = savedOrder.getItems().stream()
+//                .map(item -> item.getProduct().getName())
+//                .collect(Collectors.joining(", "));
+//        generatedHistory.setProductNames(products);
+//
+//        BigDecimal total = savedOrder.getItems().stream()
+//                .map(item -> item.getProduct().getPrice().multiply(new BigDecimal(item.getQuantity())))
+//                .reduce(BigDecimal.ZERO, BigDecimal::add);
+//        generatedHistory.setTotalPrice(total);
+//
+//        // Wywołanie API za pomocą wygenerowanego klienta
+//        historyApi.create(generatedHistory);
 
         return savedOrder;
     }
@@ -83,10 +83,10 @@ public class OrderService {
         Order updatedOrder = orderRepository.save(order);
 
         // Synchronizacja: wysłanie zmiany statusu do drugiego mikroserwisu
-        // orderHistoryClient.syncDeliveryStatus(orderId, newStatus);
+        orderHistoryClient.syncDeliveryStatus(orderId, newStatus);
 
         // Wywołanie zmiany statusu za pomocą wygenerowanego klienta
-        historyApi.updateStatus(orderId, newStatus.name());
+        // historyApi.updateStatus(orderId, newStatus.name());
 
         return updatedOrder;
     }

@@ -12,7 +12,7 @@ public class OpenApiConfig {
     public GroupedOpenApi historyApi() {
         return GroupedOpenApi.builder()
                 .group("ordershistory")
-                .pathsToMatch("/ordershistory", "/ordershistory/{id}")
+                .pathsToMatch("/ordershistory", "/ordershistory/{id}", "/ordershistory/paged")
                 .build();
     }
 

@@ -1,5 +1,6 @@
 package pl.pwr.orderhistory.api;
 
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -8,6 +9,7 @@ import pl.pwr.orderhistory.service.OrderHistoryService;
 
 @RestController
 @RequestMapping("/ordershistory")
+@Tag(name = "CREATE")
 public class OrderHistoryCommandController {
 
     private final OrderHistoryService service;
@@ -23,6 +25,7 @@ public class OrderHistoryCommandController {
 
     @PatchMapping("/{id}/status")
     public ResponseEntity<OrderHistory> updateStatus(@PathVariable Long id, @RequestParam String status) {
-        return ResponseEntity.ok(service.updateDeliveryStatus(id, status));
+        OrderHistory updatedOrderHistory = service.updateDeliveryStatus(id, status);
+        return ResponseEntity.ok(updatedOrderHistory);
     }
 }

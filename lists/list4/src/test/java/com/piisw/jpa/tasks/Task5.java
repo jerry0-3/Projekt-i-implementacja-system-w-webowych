@@ -5,11 +5,12 @@ import com.piisw.jpa.repositories.ServerRepository;
 import com.piisw.jpa.services.ServerService;
 import org.hamcrest.Matchers;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.context.annotation.Bean;
-
+import org.springframework.test.context.bean.override.mockito.MockitoBean; // Zastępuje stare @MockBean
 
 import java.util.Optional;
 
@@ -21,7 +22,8 @@ class Task5 {
     @Autowired
     private ServerService serverService;
 
-    @Autowired // TODO: configure as mockrepository
+    // Podmieniamy prawdziwe repozytorium na Mocka
+    @MockitoBean
     private ServerRepository serverRepositoryMock;
 
     @Test
@@ -31,7 +33,7 @@ class Task5 {
         String mockServerName = "Alex";
         String mockServerIp = "noIp";
         Server dummyServer = new Server(mockServerName, mockServerIp);
-        whenSerachingForNameReturn(serverName, dummyServer);
+        whenSearchingForNameReturn(serverName, dummyServer);
 
         // when
         Optional<Server> result = serverService.findByName(serverName);
@@ -42,8 +44,12 @@ class Task5 {
         assertThat(result.get().getIp(), Matchers.is(mockServerIp));
     }
 
-    private void whenSerachingForNameReturn(String serverName, Server dummyServer) {
-        // TODO: add your mock definition here
+    private void whenSearchingForNameReturn(String serverName, Server dummyServer) {
+        // Definiujemy zachowanie mocka:
+        // "Kiedy na mocku repozytorium zostanie wywołana metoda findByName z dokładnym argumentem (eq) serverName,
+        // to zwróć jako wynik Option zawierającego nasz dummyServer"
+        Mockito.when(serverRepositoryMock.findByName(Mockito.eq(serverName)))
+                .thenReturn(Optional.of(dummyServer));
     }
 
     @TestConfiguration
@@ -54,5 +60,4 @@ class Task5 {
             return new ServerService(serverRepository);
         }
     }
-
 }

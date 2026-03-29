@@ -25,12 +25,12 @@ class Task1 {
     @Test
     void shouldIncrementVersionCounterOnSave() throws Exception {
         // given
-        Server server = serverRepository.getById(1L);
+        Server server = serverRepository.findById(1L).orElseThrow();
         Long currentVersion = server.getVersion();
 
         // when
         server.setName("name2");
-        serverRepository.saveAndFlush(server); // we need to force a flush to demonstrate the feature, under normal execution this would happen during transaction commit
+        serverRepository.saveAndFlush(server);
 
         // then
         assertThat("Version counter must be incremented", server.getVersion(), is(2L));
@@ -44,7 +44,7 @@ class Task1 {
         Server server = new Server("server1", "138.0.1.5");
 
         // when
-        serverRepository.saveAndFlush(server); // we need to force a flush to demonstrate the feature, under normal execution this would happen during transaction commit
+        serverRepository.saveAndFlush(server);
 
         // then
         assertThat("Created date must be set", server.getCreatedDate(), is(notNullValue()));
@@ -53,12 +53,12 @@ class Task1 {
     @Test
     void shouldUpdateLastUpdateDateOnServerAfterUpdate() throws Exception {
         // given
-        Server server = serverRepository.getById(1L);
+        Server server = serverRepository.findById(1L).orElseThrow();
         LocalDateTime base = LocalDateTime.now();
 
         // when
         server.setName("name2");
-        serverRepository.saveAndFlush(server); // we need to force a flush to demonstrate the feature, under normal execution this would happen during transaction commit
+        serverRepository.saveAndFlush(server);
 
         // then
         assertThat("Last update date must be set", server.getLastUpdateDate(), is(notNullValue()));
@@ -69,13 +69,15 @@ class Task1 {
     void shouldPerformSoftDelete() throws Exception {
         // given
         Server server = new Server("server 1", "138.0.2.5");
-        serverRepository.saveAndFlush(server); // we need to force a flush to demonstrate the feature, under normal execution this would happen during transaction commit
+        serverRepository.saveAndFlush(server);
 
         // when
         serverRepository.deleteById(server.getId());
+        // Zakończenie transakcji testowej wymusza zapis zmian w bazie (wykonanie naszego SQL UPDATE)
         TestTransaction.end();
 
         // then
+        // Rekord nadal jest fizycznie w bazie (isActive = false), ale findById zwraca empty() dzięki adnotacji @SQLRestriction
         assertThat(serverRepository.findById(server.getId()).isPresent(), is(false));
     }
 }

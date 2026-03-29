@@ -1,20 +1,11 @@
 package com.piisw.jpa.entities;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.FetchType;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.Inheritance;
-import jakarta.persistence.InheritanceType;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.SequenceGenerator;
+import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
 import java.time.LocalDateTime;
+import java.util.Set;
 
 @Entity
 @Getter
@@ -44,5 +35,12 @@ public abstract class Event {
 
     @Column
     private boolean analysisRequired;
+
+    @Column
+    private String description;
+
+    // Relacja 1:N - jedno zdarzenie ma wiele komentarzy
+    @OneToMany(mappedBy = "event", fetch = FetchType.LAZY)
+    private Set<Comment> comments;
 
 }

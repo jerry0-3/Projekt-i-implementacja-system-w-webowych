@@ -2,10 +2,13 @@ drop table if exists exception_event CASCADE;
 drop table if exists request_event CASCADE;
 drop table if exists server CASCADE;
 drop table if exists sql_event CASCADE;
+
 drop sequence if exists event_seq;
 drop sequence if exists server_seq;
+
 create sequence event_seq start with 1 increment by 1;
 create sequence server_seq start with 1 increment by 1;
+
 create table exception_event
 (
     id                integer   not null,
@@ -21,6 +24,7 @@ create table exception_event
     occurance_method  varchar(255),
     primary key (id)
 );
+
 create table request_event
 (
     id                integer      not null,
@@ -33,6 +37,7 @@ create table request_event
     method            varchar(255) not null,
     primary key (id)
 );
+
 create table server
 (
     id               integer      not null,
@@ -40,8 +45,11 @@ create table server
     last_update_date timestamp,
     name             varchar(255) not null,
     version          bigint,
+    created_date     timestamp,
+    is_active        boolean      not null,
     primary key (id)
 );
+
 create table sql_event
 (
     id                integer       not null,
@@ -54,9 +62,12 @@ create table sql_event
     sql_query         varchar(4000) not null,
     primary key (id)
 );
+
 alter table exception_event
     add constraint FK_exc_ev_server foreign key (server_id) references server;
+
 alter table request_event
     add constraint FK_req_ev_event foreign key (server_id) references server;
+
 alter table sql_event
     add constraint FK__sql_ev_server foreign key (server_id) references server;

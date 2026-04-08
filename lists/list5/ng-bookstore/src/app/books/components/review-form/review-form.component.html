@@ -1,0 +1,27 @@
+<section class="card p-3 mt-4 border-primary">
+    <h5>Add a new review</h5>
+    <form [formGroup]="reviewForm" (ngSubmit)="onSubmit()">
+      <div class="mb-2">
+        <input type="text" formControlName="author" placeholder="Your Name" class="form-control"
+               [class.is-invalid]="reviewForm.get('author')?.invalid && reviewForm.get('author')?.touched">
+      </div>
+      <div class="mb-2">
+        <input type="text" formControlName="title" placeholder="Review Title" class="form-control"
+               [class.is-invalid]="reviewForm.get('title')?.invalid && reviewForm.get('title')?.touched">
+      </div>
+      <div class="mb-2">
+        <select formControlName="rate" class="form-select">
+          <option [value]="5">5 - Excellent</option>
+          <option [value]="4">4 - Very Good</option>
+          <option [value]="3">3 - Average</option>
+          <option [value]="2">2 - Poor</option>
+          <option [value]="1">1 - Terrible</option>
+        </select>
+      </div>
+      <div class="mb-2">
+        <textarea formControlName="description" placeholder="Your review description..." class="form-control" rows="3"
+                  [class.is-invalid]="reviewForm.get('description')?.invalid && reviewForm.get('description')?.touched"></textarea>
+      </div>
+      <button type="submit" class="btn btn-primary" [disabled]="reviewForm.invalid">Add Review</button>
+    </form>
+  </section>

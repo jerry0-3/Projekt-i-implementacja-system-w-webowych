@@ -1,0 +1,45 @@
+<article class="m-3">
+  <!-- Link powrotny -->
+  <div class="mb-3">
+    <a routerLink="/books" class="btn btn-outline-primary">&larr; Back to list</a>
+  </div>
+
+  @if (book) {
+    <div class="card mb-4">
+      <div class="card-header bg-light">
+        Book Details
+      </div>
+      <div class="card-body">
+        <h2 class="card-title">{{ book.title }}</h2>
+        <h5 class="card-subtitle mb-3 text-muted">Author: {{ book.author }}</h5>
+        <p class="mb-2"><strong>Year:</strong> {{ book.year }}</p>
+        
+        <h6 class="mt-4">Description:</h6>
+        <p class="card-text">{{ book.description }}</p>
+      </div>
+    </div>
+
+    <!-- 3c Sekcja Recenzji -->
+    <div class="reviews-section mt-5">
+      <h3 class="mb-3">Reviews ({{ reviews?.length || 0 }})</h3>
+      
+      @if (reviews.length > 0) {
+        <section class="d-flex flex-column gap-1">
+          <!-- 3a Pętla iterująca po recenzjach i renderująca osobny komponent -->
+          @for (review of reviews; track review.id) {
+            <bs-review [review]="review"></bs-review>
+          }
+        </section>
+      } @else {
+        <div class="alert alert-info">
+          No reviews found for this book yet.
+        </div>
+      }
+
+      <bs-review-form 
+        [bookId]="book.id" 
+        (reviewAdded)="handleReviewAdded($event)">
+      </bs-review-form>
+    </div>
+  }
+</article>

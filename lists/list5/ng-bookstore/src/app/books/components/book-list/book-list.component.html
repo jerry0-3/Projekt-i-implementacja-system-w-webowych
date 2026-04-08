@@ -1,5 +1,15 @@
 <article class="m-3">
   <h2>List of all books</h2>
+
+  <!-- Nowe pole wyszukiwania 5a -->
+  <div class="mb-4">
+    <input 
+      type="search" 
+      class="form-control" 
+      placeholder="Search for books (type at least 2 characters)..." 
+      [formControl]="searchControl">
+  </div>
+
   <section class="d-flex flex-column gap-2">
     @for (book of books; track book.id) {
       <div class="card">
@@ -15,5 +25,11 @@
       </div>
     }
 
+    <!-- Wiadomość gdy wyszukiwanie nic nie zwróci -->
+    @if (books.length === 0) {
+      <div class="alert alert-warning">
+        No books found matching your search criteria.
+      </div>
+    }
   </section>
 </article>

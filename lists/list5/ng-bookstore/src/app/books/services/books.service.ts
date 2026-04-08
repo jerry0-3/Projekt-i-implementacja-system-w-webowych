@@ -15,4 +15,19 @@ export class BooksService {
   getAllBooks(): Observable<Book[]> {
     return this.http.get<Book[]>(booksApiPrefix);
   }
+
+  // 1a Metoda do pobierania szczegółów konkretnej książki
+  findBookById(id: number | string): Observable<Book> {
+    return this.http.get<Book>(`${booksApiPrefix}/${id}`);
+  }
+
+  // 2d Metoda do zapisywania zmodyfikowanej książki
+  saveBook(id: number | string, book: Book): Observable<Book> {
+    return this.http.put<Book>(`${booksApiPrefix}/${id}`, book);
+  }
+
+  // 5 Metoda do wyszukiwania pełnotekstowego
+  searchBooks(query: string): Observable<Book[]> {
+    return this.http.get<Book[]>(`${booksApiPrefix}?q=${query}`);
+  }
 }

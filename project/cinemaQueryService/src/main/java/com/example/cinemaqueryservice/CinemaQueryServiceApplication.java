@@ -1,4 +1,4 @@
-package com.example.cinemaqueryqservice;
+package com.example.cinemaqueryservice;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -6,8 +6,8 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 @SpringBootApplication
 public class CinemaQueryServiceApplication {
 
-    static void main(String[] args) {
-        SpringApplication.run(CinemaQueryServiceApplication.class, args);
-    }
+	static void main(String[] args) {
+		SpringApplication.run(CinemaQueryServiceApplication.class, args);
+	}
 
 }

@@ -4,6 +4,7 @@ import com.example.cinemacommandservice.dto.SeatInfoDto;
 import com.example.cinemacommandservice.dto.TicketDetailsResponse;
 import com.example.cinemacommandservice.model.*;
 import com.example.cinemacommandservice.repository.*;
+import com.example.cinemacommandservice.client.QueryServiceClient;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -21,6 +22,7 @@ public class TicketService {
     private final ScreeningRepository screeningRepository;
     private final SeatRepository seatRepository;
     private final ReservedSeatRepository reservedSeatRepository;
+    private final QueryServiceClient queryServiceClient;
 
     @Transactional
     public String buyTicket(Long screeningId, List<Long> seatIds) {
@@ -57,6 +59,8 @@ public class TicketService {
         }
 
         ticketRepository.save(ticket);
+
+        queryServiceClient.syncReservedSeats(screeningId, seatIds);
 
         return ticket.getUniqueCode();
     }

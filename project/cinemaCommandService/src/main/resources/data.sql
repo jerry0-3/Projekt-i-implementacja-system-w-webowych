@@ -98,7 +98,7 @@ CROSS JOIN (VALUES (1),(2),(3),(4),(5),(6)) AS seat_t(seat_n);
 
 
 -- ==========================================
--- 4. SEANSY (REPERTUAR NA WEEKEND + PONIEDZIAŁEK)
+-- 4. SEANSY (REPERTUAR NA WEEKEND)
 -- ==========================================
 
 -- ------------- PIĄTEK, 15 Maja 2026 -------------

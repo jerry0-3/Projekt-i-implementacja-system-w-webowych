@@ -1,14 +1,5 @@
 package com.example.cinemacommandservice.dto;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
 import java.util.List;
 
-@Data
-@NoArgsConstructor
-@AllArgsConstructor
-public class BuyTicketRequest {
-    private Long screeningId;
-    private List<Long> seatIds;
-}
+public record BuyTicketRequest(Long screeningId, List<Long> seatIds) {}

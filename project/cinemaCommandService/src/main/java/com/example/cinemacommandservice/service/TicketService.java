@@ -67,7 +67,7 @@ public class TicketService {
 
         // Stan: Nie istnieje
         if (ticketOpt.isEmpty()) {
-            return TicketDetailsResponse.builder().status("NIE ISTNIEJE").build();
+            return new TicketDetailsResponse("NIE ISTNIEJE", null, null, null, null);
         }
 
         Ticket ticket = ticketOpt.get();
@@ -78,13 +78,8 @@ public class TicketService {
 
         String roomName = ticket.getReservedSeats().getFirst().getSeat().getRoom().getName();
 
-        return TicketDetailsResponse.builder()
-                .status(dynamicStatus)
-                .totalSeats(seatInfos.size())
-                .roomName(roomName)
-                .movieTitle(ticket.getScreening().getMovie().getTitle())
-                .seats(seatInfos)
-                .build();
+        return new TicketDetailsResponse(dynamicStatus, seatInfos.size(), roomName,
+                ticket.getScreening().getMovie().getTitle(), seatInfos);
     }
 
     @Transactional

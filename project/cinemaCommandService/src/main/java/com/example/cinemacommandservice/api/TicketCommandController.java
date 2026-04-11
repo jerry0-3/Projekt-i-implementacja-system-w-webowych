@@ -22,7 +22,7 @@ public class TicketCommandController {
     @PostMapping
     @Operation(summary = "Kup bilet", description = "Generuje nowy bilet dla widza na konkretny seans i miejsce.")
     public ResponseEntity<BuyTicketResponse> buyTicket(@RequestBody BuyTicketRequest request) {
-        String ticketCode = ticketService.buyTicket(request.getScreeningId(), request.getSeatIds());
+        String ticketCode = ticketService.buyTicket(request.screeningId(), request.seatIds());
 
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(new BuyTicketResponse(ticketCode, "Bilet został pomyślnie zakupiony."));

@@ -1,0 +1,2 @@
+docker run --name cinema-postgres -p 5432:5432 -e POSTGRES_USER=cinema -e POSTGRES_PASSWORD=cinema -e POSTGRES_DB=cinema_command_db -d postgres
+docker exec -it cinema-postgres psql -U cinema -d cinema_command_db -c "CREATE DATABASE cinema_query_db;"

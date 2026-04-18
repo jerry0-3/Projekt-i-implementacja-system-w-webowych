@@ -1,23 +1,25 @@
 -- ==========================================
 -- CZYSZCZENIE TABEL (kolejność odwrotna do relacji)
 -- ==========================================
-DELETE FROM reserved_seats;
-ALTER TABLE reserved_seats ALTER COLUMN id RESTART WITH 1;
+--DELETE FROM reserved_seats;
+--ALTER TABLE reserved_seats ALTER COLUMN id RESTART WITH 1;
+--
+--DELETE FROM tickets;
+--ALTER TABLE tickets ALTER COLUMN id RESTART WITH 1;
+--
+--DELETE FROM screenings;
+--ALTER TABLE screenings ALTER COLUMN id RESTART WITH 1;
+--
+--DELETE FROM seats;
+--ALTER TABLE seats ALTER COLUMN id RESTART WITH 1;
+--
+--DELETE FROM rooms;
+--ALTER TABLE rooms ALTER COLUMN id RESTART WITH 1;
+--
+--DELETE FROM movies;
+--ALTER TABLE movies ALTER COLUMN id RESTART WITH 1;
 
-DELETE FROM tickets;
-ALTER TABLE tickets ALTER COLUMN id RESTART WITH 1;
-
-DELETE FROM screenings;
-ALTER TABLE screenings ALTER COLUMN id RESTART WITH 1;
-
-DELETE FROM seats;
-ALTER TABLE seats ALTER COLUMN id RESTART WITH 1;
-
-DELETE FROM rooms;
-ALTER TABLE rooms ALTER COLUMN id RESTART WITH 1;
-
-DELETE FROM movies;
-ALTER TABLE movies ALTER COLUMN id RESTART WITH 1;
+TRUNCATE TABLE reserved_seats, tickets, screenings, seats, rooms, movies RESTART IDENTITY CASCADE;
 
 -- ==========================================
 -- 1. FILMY (25 Tytułów - różnorodne gatunki)

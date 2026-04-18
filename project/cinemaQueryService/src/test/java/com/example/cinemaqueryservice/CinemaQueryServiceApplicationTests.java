@@ -12,7 +12,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.test.context.jdbc.Sql;
 
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -51,7 +50,7 @@ class CinemaQueryServiceApplicationTests {
 	@Test
 	void shouldMarkSeatsAsOccupied(){
 		Long screeningID = 1L;
-		List<Long> seatIDs = new ArrayList();
+		List<Long> seatIDs = new ArrayList<>();
 
 		List<ScreeningSeatView> view = screeningSeatViewRepository.findByScreeningId(screeningID);
 		for(ScreeningSeatView v : view){
@@ -69,7 +68,7 @@ class CinemaQueryServiceApplicationTests {
 	@Test
 	void shouldFindFilteredRepertoire(){
 		Long movieID = 1L;
-		String roomName = new String("Sala 6 - 3D");
+		String roomName = "Sala 6 - 3D";
 
 		int pageNumber = 2;
 		int pageSize = 10;

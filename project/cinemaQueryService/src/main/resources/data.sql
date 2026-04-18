@@ -1,10 +1,12 @@
 -- ==========================================
 -- CZYSZCZENIE TABEL / WIDOKÓW
 -- ==========================================
-DELETE FROM screening_seats_view;
-ALTER TABLE screening_seats_view ALTER COLUMN id RESTART WITH 1;
+--DELETE FROM screening_seats_view;
+--ALTER TABLE screening_seats_view ALTER COLUMN id RESTART WITH 1;
+--
+--DELETE FROM repertoire_view;
 
-DELETE FROM repertoire_view;
+TRUNCATE TABLE screening_seats_view, repertoire_view RESTART IDENTITY CASCADE;
 
 -- ==========================================
 -- 1. ZDENORMALIZOWANY REPERTUAR (Widok)

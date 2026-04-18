@@ -11,6 +11,6 @@ public interface RepertoireViewRepository extends JpaRepository<RepertoireView, 
 
     @Query("SELECT r FROM RepertoireView r WHERE " +
             "(:movieId IS NULL OR r.movieId = :movieId) AND " +
-            "(:roomName IS NULL OR LOWER(r.roomName) LIKE LOWER(CONCAT('%', :roomName, '%')))")
+            "(CAST(:roomName AS String) IS NULL OR LOWER(r.roomName) LIKE LOWER(CONCAT('%', CAST(:roomName AS String), '%')))")
     Page<RepertoireView> findFilteredRepertoire(@Param("movieId") Long movieId, @Param("roomName") String roomName, Pageable pageable);
 }

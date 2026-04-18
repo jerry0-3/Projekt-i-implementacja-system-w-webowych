@@ -23,7 +23,7 @@ import java.util.List;
 @SpringBootTest
 @Transactional
 @Sql(scripts = "/test-data.sql", executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
-class CinemaQueryServiceApplicationTests {
+class RepositoriesTests {
 
 	@Autowired
 	private ScreeningSeatViewRepository screeningSeatViewRepository;

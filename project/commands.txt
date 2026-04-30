@@ -2,3 +2,4 @@ docker run --name cinema-postgres -p 5432:5432 -e POSTGRES_USER=cinema -e POSTGR
 docker exec -it cinema-postgres psql -U cinema -d cinema_command_db -c "CREATE DATABASE cinema_query_db;"
 
 npm install angularx-qrcode
+nq serve

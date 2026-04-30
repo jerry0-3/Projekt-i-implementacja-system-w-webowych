@@ -13,15 +13,41 @@ header {
       letter-spacing: 2px;
     }
   
-    nav a {
-      color: #ffffff;
-      text-decoration: none;
-      font-weight: 600;
-      font-size: 1.1rem;
-      transition: color 0.3s ease;
+    nav {
+      display: flex;
+      align-items: center;
+      gap: 2rem;
+
+      a {
+        color: #ffffff;
+        text-decoration: none;
+        font-weight: 600;
+        font-size: 1.1rem;
+        transition: color 0.3s ease;
+    
+        &:hover {
+          color: #e50914;
+        }
+
+        &.active {
+          color: #e50914;
+          border-bottom: 2px solid #e50914;
+        }
+      }
+
+      .btn-logout-nav {
+        background: #e50914;
+        color: white;
+        border: none;
+        padding: 6px 15px;
+        border-radius: 4px;
+        font-weight: bold;
+        cursor: pointer;
+        font-size: 0.9rem;
   
-      &:hover {
-        color: #e50914;
+        &:hover {
+          background: #ff0f1e;
+        }
       }
     }
   }

@@ -1,1 +1,57 @@
-<p>ticket-scanner works!</p>
+<div class="scanner-container">
+  
+    <div class="header">
+      <h2>Skaner Biletów</h2>
+      <button class="btn-logout" (click)="logout()">Wyloguj się</button>
+    </div>
+  
+    <!-- Sekcja wprowadzania kodu -->
+    <div class="search-box">
+      <input 
+        type="text" 
+        [(ngModel)]="ticketCode" 
+        (keyup.enter)="scanTicket()"
+        placeholder="Wprowadź lub zeskanuj kod biletu (UUID)..." 
+        [disabled]="isLoading()">
+      <button class="btn-primary" (click)="scanTicket()" [disabled]="isLoading() || !ticketCode()">
+        SKANUJ
+      </button>
+    </div>
+  
+    @if (errorMessage()) {
+      <div class="error-box">
+        {{ errorMessage() }}
+      </div>
+    }
+  
+    <!-- Wynik Skanowania -->
+    @if (ticketDetails(); as details) {
+      <div class="ticket-card" [ngClass]="details.status.toLowerCase()">
+        <div class="status-banner">
+          STATUS: <strong>{{ details.status }}</strong>
+        </div>
+        
+        <div class="ticket-info">
+          <h3>{{ details.movieTitle }}</h3>
+          <p class="room">{{ details.roomName }}</p>
+          
+          <div class="seats-info">
+            Liczba miejsc: <strong>{{ details.totalSeats }}</strong>
+            <div class="seats-list">
+              @for (seat of details.seats; track seat.seatNumber) {
+                <span class="seat-badge">Rząd {{ seat.rowNumber }}, Miejsce {{ seat.seatNumber }}</span>
+              }
+            </div>
+          </div>
+        </div>
+  
+        <!-- Jeśli bilet jest WAŻNY, pozwalamy go skasować -->
+        @if (details.status === 'WAŻNY') {
+          <div class="actions">
+            <!-- Używamy małego triku: przekazujemy kod, który wyświetliliśmy (chociaż wyczyściliśmy input) -->
+            <button class="btn-cancel" (click)="cancelTicket(ticketCode() || 'TU_WPISZ_KOD_BILETU')">SKASUJ BILET</button>
+          </div>
+        }
+      </div>
+    }
+  </div>

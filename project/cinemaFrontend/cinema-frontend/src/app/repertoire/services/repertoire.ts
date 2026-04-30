@@ -10,6 +10,13 @@ export class RepertoireService {
   // Dzięki proxy.conf.json, to zapytanie trafi prosto do portu 8081!
   private readonly BASE_API_URL = '/api/queries';
 
+  public filterState = {
+    page: 0,
+    size: 10,
+    movieId: null as number | null,
+    roomName: null as string | null
+  };
+
   constructor(private http: HttpClient) {}
 
   getMovies(): Observable<MovieDictionaryDto[]> {

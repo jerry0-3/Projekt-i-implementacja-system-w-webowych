@@ -32,7 +32,16 @@ export class RepertoireListComponent implements OnInit {
 
   ngOnInit(): void {
     this.loadDictionaries();
-    this.loadRepertoire();
+
+    // Zamiast zaczynać od zera, pobieramy ostatnio zapamiętany stan z serwisu
+    const state = this.repertoireService.filterState;
+    this.currentPage.set(state.page);
+    this.pageSize.set(state.size);
+    this.selectedMovieId.set(state.movieId);
+    this.selectedRoomName.set(state.roomName);
+
+    // Ładujemy repertuar z zapamiętaną stroną
+    this.loadRepertoire(this.currentPage());
   }
 
   loadDictionaries(): void {
@@ -42,6 +51,13 @@ export class RepertoireListComponent implements OnInit {
 
   loadRepertoire(page: number = 0): void {
     this.isLoading.set(true);
+
+    this.repertoireService.filterState = {
+      page: page,
+      size: this.pageSize(),
+      movieId: this.selectedMovieId(),
+      roomName: this.selectedRoomName()
+    };
     
     // Przekazujemy aktualne wartości filtrów do serwisu
     this.repertoireService.getRepertoire(page, this.pageSize(), this.selectedMovieId(), this.selectedRoomName()).pipe(

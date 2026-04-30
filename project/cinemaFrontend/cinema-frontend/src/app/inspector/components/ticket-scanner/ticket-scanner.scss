@@ -1,0 +1,138 @@
+.scanner-container {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 2rem;
+  }
+  
+  .header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 2rem;
+    border-bottom: 2px solid #333;
+    padding-bottom: 1rem;
+  
+    h2 { color: white; margin: 0; }
+    
+    .btn-logout {
+      background: transparent;
+      color: #888;
+      border: 1px solid #555;
+      padding: 8px 16px;
+      border-radius: 6px;
+      cursor: pointer;
+      &:hover { color: white; background-color: #333; }
+    }
+  }
+  
+  .search-box {
+    display: flex;
+    gap: 1rem;
+    margin-bottom: 2rem;
+  
+    input {
+      flex-grow: 1;
+      padding: 15px;
+      font-size: 1.2rem;
+      background-color: #1a1a1a;
+      border: 2px solid #444;
+      color: white;
+      border-radius: 8px;
+      outline: none;
+  
+      &:focus { border-color: #e50914; }
+    }
+  
+    .btn-primary {
+      background-color: #e50914;
+      color: white;
+      font-weight: bold;
+      font-size: 1.2rem;
+      padding: 0 30px;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      &:disabled { opacity: 0.5; cursor: not-allowed; }
+    }
+  }
+  
+  .error-box {
+    background-color: rgba(229, 9, 20, 0.2);
+    border: 1px solid #ff4d4d;
+    color: #ff4d4d;
+    padding: 1rem;
+    border-radius: 8px;
+    text-align: center;
+    font-weight: bold;
+    margin-bottom: 2rem;
+  }
+  
+  .ticket-card {
+    background-color: #1e1e1e;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+  
+    .status-banner {
+      padding: 1rem;
+      text-align: center;
+      font-size: 1.5rem;
+      font-weight: 900;
+      letter-spacing: 2px;
+      color: white;
+    }
+  
+    /* Style bazujące na statusie biletu z backendu */
+    &.ważny .status-banner { background-color: #4CAF50; } // Zielony
+    &.skasowany .status-banner { background-color: #777; }  // Szary
+    &.nieważny .status-banner { background-color: #e50914; } // Czerwony
+  
+    .ticket-info {
+      padding: 2rem;
+      
+      h3 { margin: 0 0 10px 0; font-size: 1.8rem; color: white; }
+      .room { color: #aaa; font-size: 1.2rem; margin-bottom: 2rem; }
+      
+      .seats-info {
+        background-color: #2a2a2a;
+        padding: 1.5rem;
+        border-radius: 8px;
+  
+        strong { color: #e50914; }
+  
+        .seats-list {
+          margin-top: 15px;
+          display: flex;
+          flex-wrap: wrap;
+          gap: 10px;
+  
+          .seat-badge {
+            background-color: #444;
+            color: white;
+            padding: 8px 12px;
+            border-radius: 4px;
+            font-size: 0.9rem;
+            font-weight: bold;
+          }
+        }
+      }
+    }
+  
+    .actions {
+      padding: 1.5rem;
+      background-color: #151515;
+      text-align: center;
+  
+      .btn-cancel {
+        background-color: #e50914;
+        color: white;
+        border: none;
+        padding: 15px 40px;
+        font-size: 1.2rem;
+        font-weight: bold;
+        border-radius: 8px;
+        cursor: pointer;
+        &:hover { background-color: #ff0f1e; }
+      }
+    }
+  }

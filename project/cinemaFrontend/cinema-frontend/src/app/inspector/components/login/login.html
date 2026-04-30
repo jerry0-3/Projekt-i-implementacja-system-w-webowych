@@ -1,1 +1,40 @@
-<p>login works!</p>
+<div class="login-container">
+    <div class="login-box">
+      <h2>Panel Biletera</h2>
+      <p class="subtitle">Zaloguj się do systemu wewnętrznego</p>
+  
+      @if (errorMessage) {
+        <div class="error-box">{{ errorMessage }}</div>
+      }
+  
+      <form (ngSubmit)="onSubmit()" #loginForm="ngForm">
+        <div class="form-group">
+          <label for="username">Login</label>
+          <input 
+            type="text" 
+            id="username" 
+            name="username" 
+            [(ngModel)]="username" 
+            required 
+            autocomplete="username"
+            placeholder="np. admin">
+        </div>
+  
+        <div class="form-group">
+          <label for="password">Hasło</label>
+          <input 
+            type="password" 
+            id="password" 
+            name="password" 
+            [(ngModel)]="password" 
+            required 
+            autocomplete="current-password"
+            placeholder="Wprowadź hasło">
+        </div>
+  
+        <button type="submit" class="btn-primary" [disabled]="!loginForm.form.valid">Zaloguj</button>
+      </form>
+      
+      <a routerLink="/repertoire" class="back-link">← Wróć do repertuaru widza</a>
+    </div>
+</div>

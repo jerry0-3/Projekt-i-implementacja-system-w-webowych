@@ -1,5 +1,6 @@
 package com.example.cinemaqueryservice.repository;
 
+import com.example.cinemaqueryservice.dto.MovieDictionaryDto;
 import com.example.cinemaqueryservice.model.RepertoireView;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -7,10 +8,18 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
+import java.util.List;
+
 public interface RepertoireViewRepository extends JpaRepository<RepertoireView, Long> {
 
     @Query("SELECT r FROM RepertoireView r WHERE " +
             "(:movieId IS NULL OR r.movieId = :movieId) AND " +
             "(CAST(:roomName AS String) IS NULL OR LOWER(r.roomName) LIKE LOWER(CONCAT('%', CAST(:roomName AS String), '%')))")
     Page<RepertoireView> findFilteredRepertoire(@Param("movieId") Long movieId, @Param("roomName") String roomName, Pageable pageable);
+
+    @Query("SELECT DISTINCT new com.example.cinemaqueryservice.dto.MovieDictionaryDto(r.movieId, r.movieTitle) FROM RepertoireView r ORDER BY r.movieTitle")
+    List<MovieDictionaryDto> findDistinctMovies();
+
+    @Query("SELECT DISTINCT r.roomName FROM RepertoireView r ORDER BY r.roomName")
+    List<String> findDistinctRooms();
 }

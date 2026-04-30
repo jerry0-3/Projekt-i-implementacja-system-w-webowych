@@ -3,6 +3,7 @@ package com.example.cinemaqueryservice.api;
 import com.example.cinemaqueryservice.model.RepertoireView;
 import com.example.cinemaqueryservice.model.ScreeningSeatView;
 import com.example.cinemaqueryservice.service.RepertoireQueryService;
+import com.example.cinemaqueryservice.dto.MovieDictionaryDto;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
@@ -50,5 +51,17 @@ public class CinemaQueryController {
         }
 
         return ResponseEntity.ok(seats);
+    }
+
+    @GetMapping("/dictionaries/movies")
+    @Operation(summary = "Pobierz słownik filmów", description = "Zwraca unikalną listę filmów do filtrów.")
+    public ResponseEntity<List<MovieDictionaryDto>> getMovies() {
+        return ResponseEntity.ok(queryService.getAvailableMovies());
+    }
+
+    @GetMapping("/dictionaries/rooms")
+    @Operation(summary = "Pobierz słownik sal", description = "Zwraca unikalną listę nazw sal do filtrów.")
+    public ResponseEntity<List<String>> getRooms() {
+        return ResponseEntity.ok(queryService.getAvailableRooms());
     }
 }

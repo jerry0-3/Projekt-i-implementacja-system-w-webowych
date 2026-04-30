@@ -1,5 +1,6 @@
 package com.example.cinemaqueryservice.service;
 
+import com.example.cinemaqueryservice.dto.MovieDictionaryDto;
 import com.example.cinemaqueryservice.model.RepertoireView;
 import com.example.cinemaqueryservice.model.ScreeningSeatView;
 import com.example.cinemaqueryservice.repository.RepertoireViewRepository;
@@ -29,6 +30,16 @@ public class RepertoireQueryService {
     @Transactional(readOnly = true)
     public List<ScreeningSeatView> getSeatsForScreening(Long screeningId) {
         return seatViewRepository.findByScreeningId(screeningId);
+    }
+
+    @Transactional(readOnly = true)
+    public List<MovieDictionaryDto> getAvailableMovies() {
+        return repertoireRepository.findDistinctMovies();
+    }
+
+    @Transactional(readOnly = true)
+    public List<String> getAvailableRooms() {
+        return repertoireRepository.findDistinctRooms();
     }
 
     // Metoda wywoływana TYLKO przez wewnętrzny endpoint synchronizacyjny

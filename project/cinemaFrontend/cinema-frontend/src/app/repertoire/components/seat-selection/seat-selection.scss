@@ -1,0 +1,311 @@
+.seat-selection-container {
+    max-width: 1000px;
+    margin: 0 auto;
+    color: #fff;
+    padding-bottom: 100px; // Miejsce na pływający pasek podsumowania
+}
+  
+.header {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    margin-bottom: 2rem;
+  
+    .btn-back {
+      background: none;
+      border: 1px solid #444;
+      color: #ccc;
+      padding: 8px 16px;
+      border-radius: 6px;
+      cursor: pointer;
+      &:hover { background: #333; color: white; }
+    }
+    
+    h2 { margin: 0; color: #e50914; }
+}
+  
+.loading {
+    text-align: center;
+    font-size: 1.5rem;
+    color: #888;
+    padding: 3rem;
+}
+  
+// STREFA EKRANU
+.cinema-room {
+    background-color: #1a1a1a;
+    padding: 3rem 2rem;
+    border-radius: 20px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+    margin-bottom: 2rem;
+}
+  
+.screen-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-bottom: 4rem;
+    position: relative;
+  
+    .screen {
+      width: 80%;
+      height: 60px;
+      background-color: #fff;
+      color: #000;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-weight: bold;
+      font-size: 1.2rem;
+      letter-spacing: 5px;
+      // Trik na wygięty ekran
+      transform: perspective(300px) rotateX(-5deg);
+      box-shadow: 0 15px 40px rgba(255, 255, 255, 0.4);
+      border-radius: 5px 5px 0 0;
+    }
+  
+    .screen-glow {
+      position: absolute;
+      top: 60px;
+      width: 80%;
+      height: 40px;
+      background: linear-gradient(to bottom, rgba(255,255,255,0.2), transparent);
+      filter: blur(10px);
+    }
+}
+  
+// UKŁAD FOTELI
+.seating-area {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    align-items: center;
+}
+  
+.row {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+  
+    .row-label {
+      color: #666;
+      font-weight: bold;
+      width: 25px;
+      text-align: center;
+    }
+  
+    .seats {
+      display: flex;
+      gap: 8px;
+    }
+}
+  
+// POJEDYNCZY FOTEL
+.seat {
+    width: 35px;
+    height: 35px;
+    border-radius: 8px 8px 4px 4px; // Zaokrąglenie jak w fotelu
+    border: none;
+    background-color: #444; // Wolny
+    color: white;
+    font-size: 0.8rem;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  
+    &:hover:not(.occupied):not(:disabled) {
+      background-color: #666;
+      transform: scale(1.1);
+    }
+  
+    &.selected {
+      background-color: #e50914; // Wybrany (Nasz czerwony motyw)
+      box-shadow: 0 0 10px rgba(229, 9, 20, 0.6);
+    }
+  
+    &.occupied {
+      background-color: #222; // Zajęty
+      color: #444;
+      cursor: not-allowed;
+      // Opcjonalnie: możemy dodać szare paski, by wyglądał na 'zablokowany'
+    }
+  
+    // Nasza dynamiczna alejka!
+    &.aisle-right {
+      margin-right: 30px;
+    }
+}
+  
+// LEGENDA
+.legend {
+    display: flex;
+    justify-content: center;
+    gap: 30px;
+    margin-top: 2rem;
+  
+    .legend-item {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-weight: bold;
+      color: #aaa;
+  
+      .seat { cursor: default; width: 25px; height: 25px; }
+      .available { background-color: #444; }
+      .selected { background-color: #e50914; }
+      .occupied { background-color: #222; }
+    }
+}
+  
+// PASEK PODSUMOWANIA (Przyklejony do dołu ekranu)
+.summary-bar {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    background-color: #111;
+    border-top: 2px solid #333;
+    padding: 1.5rem 3rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    box-shadow: 0 -10px 20px rgba(0,0,0,0.5);
+    animation: slideUp 0.3s ease-out;
+  
+    .summary-info {
+      h3 { margin: 0 0 5px 0; color: white; }
+      p { margin: 0; color: #aaa; }
+      span { display: inline-block; background: #333; padding: 2px 8px; border-radius: 4px; margin-right: 5px; }
+    }
+  
+    .btn-buy {
+      background-color: #e50914;
+      color: white;
+      font-size: 1.2rem;
+      font-weight: bold;
+      padding: 12px 30px;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+  
+      &:hover { background-color: #ff0f1e; }
+    }
+}
+  
+@keyframes slideUp {
+    from { transform: translateY(100%); }
+    to { transform: translateY(0); }
+}
+
+.success-screen {
+    text-align: center;
+    background-color: #1a1a1a;
+    padding: 4rem 2rem;
+    border-radius: 20px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+    margin-top: 2rem;
+    animation: fadeIn 0.5s ease-out;
+  
+    .success-icon {
+      font-size: 5rem;
+      margin-bottom: 1rem;
+    }
+  
+    h2 {
+      color: #4CAF50; // Zielony kolor sukcesu
+      font-size: 2.5rem;
+      margin-bottom: 1rem;
+    }
+  
+    p {
+      color: #ccc;
+      font-size: 1.2rem;
+      margin-bottom: 3rem;
+    }
+  
+    .ticket-code-box {
+      background-color: #222;
+      border: 2px dashed #e50914;
+      padding: 2rem;
+      border-radius: 10px;
+      display: inline-block;
+      margin-bottom: 3rem;
+  
+      .label {
+        display: block;
+        color: #888;
+        font-size: 0.9rem;
+        text-transform: uppercase;
+        margin-bottom: 10px;
+      }
+  
+      .code {
+        display: block;
+        color: white;
+        font-size: 2.5rem;
+        font-weight: bold;
+        letter-spacing: 3px;
+      }
+    }
+  
+    .btn-primary {
+      display: inline-block;
+      background-color: #e50914;
+      color: white;
+      text-decoration: none;
+      padding: 15px 30px;
+      font-size: 1.2rem;
+      font-weight: bold;
+      border-radius: 8px;
+      border: none;
+      cursor: pointer;
+      transition: background-color 0.3s;
+  
+      &:hover {
+        background-color: #ff0f1e;
+      }
+    }
+}
+  
+@keyframes fadeIn {
+    from { opacity: 0; transform: scale(0.95); }
+    to { opacity: 1; transform: scale(1); }
+}
+
+.ticket-code-box {
+    background-color: #222;
+    border: 2px dashed #e50914;
+    padding: 2rem;
+    border-radius: 10px;
+    display: inline-block;
+    margin-bottom: 3rem;
+
+    // Dodane style dla QR
+    .qr-wrapper {
+      background-color: white; // Czytniki lepiej radzą sobie z czarnym kodem na białym tle
+      padding: 15px;
+      border-radius: 8px;
+      display: inline-block;
+      margin-bottom: 20px;
+    }
+
+    .label {
+      display: block;
+      color: #888;
+      font-size: 0.9rem;
+      text-transform: uppercase;
+      margin-bottom: 10px;
+    }
+
+    .code {
+      display: block;
+      color: white;
+      font-size: 1.8rem; // Zmniejszyłem lekko czcionkę, żeby UUID zmieścił się w jednej linii
+      font-weight: bold;
+      letter-spacing: 2px;
+    }
+}

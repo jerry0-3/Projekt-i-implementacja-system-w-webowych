@@ -1,1 +1,76 @@
-<p>repertoire-list works!</p>
+<div class="repertoire-container">
+    <h2>Repertuar Kina</h2>
+  
+    <!-- PASEK FILTRÓW -->
+    <div class="filters-bar">
+      <div class="filter-group">
+        <label for="movieFilter">Wybierz film:</label>
+        <select id="movieFilter" [(ngModel)]="selectedMovieId" (change)="onFilterChange()">
+          <option [ngValue]="null">--- Wszystkie filmy ---</option>
+          @for (movie of moviesList(); track movie.id) {
+            <option [ngValue]="movie.id">{{ movie.title }}</option>
+          }
+        </select>
+      </div>
+  
+      <div class="filter-group">
+        <label for="roomFilter">Wybierz salę:</label>
+        <select id="roomFilter" [(ngModel)]="selectedRoomName" (change)="onFilterChange()">
+          <option [ngValue]="null">--- Wszystkie sale ---</option>
+          @for (room of roomsList(); track room) {
+            <option [ngValue]="room">{{ room }}</option>
+          }
+        </select>
+      </div>
+
+      <div class="filter-group size-group">
+        <label for="pageSizeFilter">Na stronie:</label>
+        <select id="pageSizeFilter" [(ngModel)]="pageSize" (change)="onFilterChange()">
+          <option [ngValue]="5">5</option>
+          <option [ngValue]="10">10</option>
+          <option [ngValue]="20">20</option>
+          <option [ngValue]="50">50</option>
+        </select>
+      </div>
+    </div>
+  
+    @if (isLoading()) {
+      <div class="loading">Ładowanie repertuaru...</div>
+    } @else {
+      <div class="screening-grid">
+        @for (screening of screenings(); track screening.screeningId) {
+          <div class="screening-card">
+            <img [src]="screening.moviePhotoUrl" [alt]="screening.movieTitle" class="movie-poster" (error)="handleImageError($event)">
+            
+            <div class="screening-info">
+              <h3>{{ screening.movieTitle }}</h3>
+              <p class="description">{{ screening.movieDescription }}</p>
+              <div class="details">
+                <span class="time"><strong>Start:</strong> {{ screening.startTime | date:'dd.MM.yyyy, HH:mm' }}</span>
+                <span class="duration"><strong>Czas trwania:</strong> {{ screening.durationMinutes }} min</span>
+                <span class="room"><strong>Sala:</strong> {{ screening.roomName }}</span>
+              </div>
+              <button [routerLink]="['/repertoire/seats', screening.screeningId]" class="btn-primary">
+                Wybierz miejsca
+              </button>
+            </div>
+          </div>
+        } @empty {
+          <div class="empty">Brak seansów w wybranym terminie.</div>
+        }
+      </div>
+  
+      <!-- ROZBUDOWANA PAGINACJA -->
+      @if (totalPages() > 1) {
+        <div class="pagination">
+          <button (click)="firstPage()" [disabled]="currentPage() === 0">Pierwsza</button>
+          <button (click)="prevPage()" [disabled]="currentPage() === 0">Poprzednia</button>
+          
+          <span>Strona {{ currentPage() + 1 }} z {{ totalPages() }}</span>
+          
+          <button (click)="nextPage()" [disabled]="currentPage() >= totalPages() - 1">Następna</button>
+          <button (click)="lastPage()" [disabled]="currentPage() >= totalPages() - 1">Ostatnia</button>
+        </div>
+      }
+    }
+  </div>

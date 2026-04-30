@@ -16,7 +16,7 @@ export interface RepertoireView {
     originalSeatId: number;
     rowNumber: number;
     seatNumber: number;
-    isAvailable: boolean;
+    available: boolean;
   }
   
   // Model HATEOAS do paginacji (uproszczony)
@@ -30,4 +30,9 @@ export interface RepertoireView {
       totalPages: number;
       number: number;
     };
+  }
+
+  export interface MovieDictionaryDto {
+    id: number;
+    title: string;
   }

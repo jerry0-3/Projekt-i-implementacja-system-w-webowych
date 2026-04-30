@@ -1,1 +1,102 @@
-<p>seat-selection works!</p>
+<div class="seat-selection-container">
+
+<div class="header">
+    <button routerLink="/repertoire" class="btn-back">← Wróć do repertuaru</button>
+    @if (!purchasedTicketCode()) {
+        <h2>Wybierz swoje miejsca</h2>
+    }
+</div>
+
+<!-- EKRAN SUKCESU -->
+@if (purchasedTicketCode()) {
+    <div class="success-screen">
+        <div class="success-icon">🎫</div>
+        <h2>Dziękujemy za zakup!</h2>
+        <p>Twoje miejsca zostały zarezerwowane. Pokaż poniższy kod przy wejściu do sali.</p>
+        
+        <div class="ticket-code-box">
+          <!-- Dodajemy białe tło pod QR kod, by czytniki łatwo go łapały w ciemnym motywie -->
+          <div class="qr-wrapper">
+            <qrcode 
+              [qrdata]="purchasedTicketCode()!" 
+              [width]="200" 
+              [errorCorrectionLevel]="'M'">
+            </qrcode>
+          </div>
+          
+          <span class="label">Twój unikalny kod biletu:</span>
+          <span class="code">{{ purchasedTicketCode() }}</span>
+        </div>
+  
+        <button routerLink="/repertoire" class="btn-primary">Wróć na stronę główną</button>
+    </div>
+} 
+
+<!-- EKRAN ŁADOWANIA LUB WYBORU MIEJSC -->
+@else {
+    @if (isLoading()) {
+        <div class="loading">Wczytywanie układu sali...</div>
+    } @else {
+        <!-- Cały poprzedni kod wyboru miejsc zostaje tutaj -->
+        <div class="cinema-room">
+            <div class="screen-container">
+            <div class="screen">EKRAN</div>
+            <div class="screen-glow"></div>
+            </div>
+
+            <div class="seating-area">
+            @for (row of rows(); track row.rowNumber) {
+                <div class="row">
+                <span class="row-label">{{ row.rowNumber }}</span>
+                <div class="seats">
+                    @for (seat of row.seats; track seat.id) {
+                    <button 
+                        class="seat"
+                        [class.occupied]="!seat.available"
+                        [class.selected]="isSelected(seat)"
+                        [class.aisle-right]="isAisle(seat.seatNumber)"
+                        [disabled]="!seat.available || isPurchasing()" 
+                        (click)="toggleSeat(seat)"
+                        [title]="'Rząd ' + row.rowNumber + ', Miejsce ' + seat.seatNumber">
+                        {{ seat.seatNumber }}
+                    </button>
+                    }
+                </div>
+                <span class="row-label">{{ row.rowNumber }}</span>
+                </div>
+            }
+            </div>
+        </div>
+
+        <div class="legend">
+            <div class="legend-item">
+              <div class="seat available"></div> Wolne
+            </div>
+            <div class="legend-item">
+              <div class="seat selected"></div> Wybrane
+            </div>
+            <div class="legend-item">
+              <div class="seat occupied"></div> Zajęte
+            </div>
+          </div>
+
+        @if (selectedSeats().length > 0) {
+            <div class="summary-bar">
+            <div class="summary-info">
+                <h3>Wybrano miejsc: {{ selectedSeats().length }}</h3>
+                <p>
+                Rzędy: 
+                @for (seat of selectedSeats(); track seat.id) {
+                    <span>{{ seat.rowNumber }}-{{ seat.seatNumber }} </span>
+                }
+                </p>
+            </div>
+            <!-- Aktualizacja przycisku -->
+            <button class="btn-buy" (click)="buyTickets()" [disabled]="isPurchasing()">
+                {{ isPurchasing() ? 'Przetwarzanie...' : 'Kup Bilety' }}
+            </button>
+            </div>
+        }
+    }
+}
+</div>

@@ -157,6 +157,12 @@ public class ApiTests {
                 .andExpect(status().isConflict());
     }
 
+    @Test
+    void verify_shouldVerify() throws Exception {
+        mockMvc.perform(get("/api/commands/tickets/verify"))
+                .andExpect(status().isOk());
+    }
+
     @TestConfiguration
     static class Config {
         @Bean

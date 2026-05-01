@@ -81,7 +81,7 @@ class RepositoriesTests {
     }
 
     @Test
-    void shouldNotFindTicketByEmptyCode(){
+    void shouldNotFindTicketByWrongCode(){
         String ticketCode = new String("");
 
         Optional<Ticket> ticket = ticketRepository.findByUniqueCodeWithDetails(ticketCode);

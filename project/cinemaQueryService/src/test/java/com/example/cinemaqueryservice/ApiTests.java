@@ -18,6 +18,7 @@ import org.springframework.hateoas.MediaTypes;
 import org.springframework.test.web.servlet.MockMvc;
 import tools.jackson.databind.ObjectMapper;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import static org.mockito.ArgumentMatchers.*;
@@ -163,6 +164,24 @@ public class ApiTests {
 
         // when + then
         mockMvc.perform(get("/api/queries/screenings/999/seats"))
+                .andExpect(status().isOk());
+    }
+
+    @Test
+    void shouldReturnAvailableMovies() throws Exception{
+        when(queryService.getAvailableMovies())
+                .thenReturn(new ArrayList<>());
+
+        mockMvc.perform(get("/api/queries/dictionaries/movies"))
+                .andExpect(status().isOk());
+    }
+
+    @Test
+    void shouldReturnAvailableRooms() throws Exception{
+        when(queryService.getAvailableRooms())
+                .thenReturn(new ArrayList<>());
+
+        mockMvc.perform(get("/api/queries/dictionaries/rooms"))
                 .andExpect(status().isOk());
     }
 

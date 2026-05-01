@@ -1,5 +1,6 @@
 package com.example.cinemaqueryservice;
 
+import com.example.cinemaqueryservice.dto.MovieDictionaryDto;
 import com.example.cinemaqueryservice.model.RepertoireView;
 import com.example.cinemaqueryservice.model.ScreeningSeatView;
 import com.example.cinemaqueryservice.repository.RepertoireViewRepository;
@@ -11,6 +12,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.*;
 import org.springframework.data.domain.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -175,5 +177,27 @@ public class ServicesTests {
 
         // then
         verify(seatViewRepository).markSeatsAsOccupied(screeningId, seatIds);
+    }
+
+    @Test
+    void shouldReturnAvailableMovies(){
+        when(repertoireRepository.findDistinctMovies()).thenReturn(new ArrayList<>());
+
+        List<MovieDictionaryDto> movies = repertoireQueryService.getAvailableMovies();
+
+        assertThat(movies).isNotNull();
+
+        verify(repertoireRepository).findDistinctMovies();
+    }
+
+    @Test
+    void shouldReturnAvailableRooms(){
+        when(repertoireRepository.findDistinctRooms()).thenReturn(new ArrayList<>());
+
+        List<String> rooms = repertoireQueryService.getAvailableRooms();
+
+        assertThat(rooms).isNotNull();
+
+        verify(repertoireRepository).findDistinctRooms();
     }
 }

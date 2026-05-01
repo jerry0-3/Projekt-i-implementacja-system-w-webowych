@@ -41,4 +41,9 @@ public class TicketCommandController {
         ticketService.consumeTicket(uniqueCode);
         return ResponseEntity.ok().build();
     }
+
+    @GetMapping("/verify")
+    public ResponseEntity<String> verifyAuth() {
+        return ResponseEntity.ok("Zalogowano pomyślnie");
+    }
 }

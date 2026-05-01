@@ -21,8 +21,7 @@ export const authInterceptor: HttpInterceptorFn = (req, next) => {
       if (error.status === 401) {
         authService.logout();
         
-        // Zabezpieczenie przed błędem na serwerze
-        if (typeof window !== 'undefined') {
+        if (typeof window !== 'undefined' && !req.url.includes('/verify')) {
           alert('Sesja wygasła lub podano błędne dane logowania.');
         }
       }

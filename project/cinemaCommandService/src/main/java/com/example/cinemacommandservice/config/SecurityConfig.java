@@ -38,6 +38,7 @@ public class SecurityConfig {
                         // 4. CHRONIONE: Tylko Bileter może skanować i skasować bilet
                         .requestMatchers(HttpMethod.GET, "/api/commands/tickets/*").hasRole("INSPECTOR")
                         .requestMatchers(HttpMethod.POST, "/api/commands/tickets/*/consume").hasRole("INSPECTOR")
+                        .requestMatchers(HttpMethod.GET, "/api/commands/tickets/verify").hasRole("INSPECTOR")
 
                         // Zabezpieczenie na wypadek dodania nowych endpointów
                         .anyRequest().authenticated()

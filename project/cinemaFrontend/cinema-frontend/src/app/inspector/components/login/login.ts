@@ -7,7 +7,7 @@ import { AuthService } from '../../services/auth';
 @Component({
   selector: 'app-login',
   standalone: true,
-  imports: [CommonModule, FormsModule], // Używamy FormsModule do [(ngModel)]
+  imports: [CommonModule, FormsModule],
   templateUrl: './login.html',
   styleUrls: ['./login.scss']
 })
@@ -21,13 +21,10 @@ export class LoginComponent {
   onSubmit(): void {
     if (this.username.trim() && this.password.trim()) {
       
-      // Wywołujemy zaktualizowaną metodę login i "nasłuchujemy" odpowiedzi
       this.authService.login(this.username, this.password).subscribe({
         next: () => {
-          // Sukces! Metoda login sama zrobiła router.navigate() w pipe(tap(...))
         },
         error: (err) => {
-          // Błąd logowania (np. kod 401 z backendu)
           if (err.status === 401) {
             this.errorMessage = 'Nieprawidłowy login lub hasło.';
           } else {

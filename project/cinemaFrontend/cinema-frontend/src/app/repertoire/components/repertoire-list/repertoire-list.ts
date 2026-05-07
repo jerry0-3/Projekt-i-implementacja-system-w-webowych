@@ -15,8 +15,7 @@ import { of } from 'rxjs';
   styleUrls: ['./repertoire-list.scss']
 })
 export class RepertoireListComponent implements OnInit {
-  
-  // Przejście na Signals, nowość w Angularze 16+, lepsze do zarządzania stanem
+
   screenings = signal<RepertoireView[]>([]);
   currentPage = signal<number>(0);
   totalPages = signal<number>(0);
@@ -33,14 +32,12 @@ export class RepertoireListComponent implements OnInit {
   ngOnInit(): void {
     this.loadDictionaries();
 
-    // Zamiast zaczynać od zera, pobieramy ostatnio zapamiętany stan z serwisu
     const state = this.repertoireService.filterState;
     this.currentPage.set(state.page);
     this.pageSize.set(state.size);
     this.selectedMovieId.set(state.movieId);
     this.selectedRoomName.set(state.roomName);
 
-    // Ładujemy repertuar z zapamiętaną stroną
     this.loadRepertoire(this.currentPage());
   }
 
@@ -58,8 +55,7 @@ export class RepertoireListComponent implements OnInit {
       movieId: this.selectedMovieId(),
       roomName: this.selectedRoomName()
     };
-    
-    // Przekazujemy aktualne wartości filtrów do serwisu
+
     this.repertoireService.getRepertoire(page, this.pageSize(), this.selectedMovieId(), this.selectedRoomName()).pipe(
       catchError(err => {
         console.error('Błąd pobierania repertuaru', err);
@@ -80,13 +76,10 @@ export class RepertoireListComponent implements OnInit {
     });
   }
 
-  // Funkcja wywoływana przy każdej zmianie w listach rozwijanych
   onFilterChange(): void {
-    // Po zmianie filtra zawsze wracamy na pierwszą stronę!
     this.loadRepertoire(0);
   }
 
-  // Rozszerzona paginacja
   nextPage(): void {
     if (this.currentPage() < this.totalPages() - 1) this.loadRepertoire(this.currentPage() + 1);
   }

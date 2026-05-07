@@ -18,8 +18,7 @@ export interface RepertoireView {
     seatNumber: number;
     available: boolean;
   }
-  
-  // Model HATEOAS do paginacji (uproszczony)
+
   export interface PagedRepertoireResponse {
     _embedded?: {
       repertoireViewList: RepertoireView[];

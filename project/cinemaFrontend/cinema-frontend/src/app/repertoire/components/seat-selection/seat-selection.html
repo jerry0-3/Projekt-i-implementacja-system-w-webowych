@@ -15,7 +15,6 @@
         <p>Twoje miejsca zostały zarezerwowane. Pokaż poniższy kod przy wejściu do sali.</p>
         
         <div class="ticket-code-box">
-          <!-- Dodajemy białe tło pod QR kod, by czytniki łatwo go łapały w ciemnym motywie -->
           <div class="qr-wrapper">
             <qrcode 
               [qrdata]="purchasedTicketCode()!" 
@@ -37,7 +36,6 @@
     @if (isLoading()) {
         <div class="loading">Wczytywanie układu sali...</div>
     } @else {
-        <!-- Cały poprzedni kod wyboru miejsc zostaje tutaj -->
         <div class="cinema-room">
             <div class="screen-container">
             <div class="screen">EKRAN</div>

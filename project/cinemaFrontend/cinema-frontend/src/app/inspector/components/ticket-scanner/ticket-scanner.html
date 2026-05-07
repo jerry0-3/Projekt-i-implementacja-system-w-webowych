@@ -44,11 +44,9 @@
             </div>
           </div>
         </div>
-  
-        <!-- Jeśli bilet jest WAŻNY, pozwalamy go skasować -->
+
         @if (details.status === 'WAŻNY') {
           <div class="actions">
-            <!-- Używamy małego triku: przekazujemy kod, który wyświetliliśmy (chociaż wyczyściliśmy input) -->
             <button class="btn-cancel" (click)="cancelTicket(ticketCode() || 'TU_WPISZ_KOD_BILETU')">SKASUJ BILET</button>
           </div>
         }

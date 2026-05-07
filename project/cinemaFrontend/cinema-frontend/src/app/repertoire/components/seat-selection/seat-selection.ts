@@ -22,14 +22,11 @@ export class SeatSelectionComponent implements OnInit {
   
   screeningId = signal<number | null>(null);
   isLoading = signal<boolean>(true);
-  
-  // Zgrupowane rzędy foteli
+
   rows = signal<SeatRow[]>([]);
   
-  // Lista zaznaczonych foteli (przechowujemy całe obiekty, aby móc je podsumować)
   selectedSeats = signal<ScreeningSeatView[]>([]);
 
-  // Wyliczamy maksymalną liczbę miejsc w rzędzie, by wiedzieć, gdzie zrobić "alejkę"
   maxSeatsInRow = signal<number>(0);
 
   isPurchasing = signal<boolean>(false);
@@ -43,7 +40,6 @@ export class SeatSelectionComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    // Odczytujemy ID seansu z URL (np. /repertoire/seats/73)
     const idParam = this.route.snapshot.paramMap.get('id');
     if (idParam) {
       this.screeningId.set(Number(idParam));
@@ -57,11 +53,9 @@ export class SeatSelectionComponent implements OnInit {
 
     this.repertoireService.getSeatsForScreening(id).subscribe({
       next: (seats) => {
-        // Obliczamy najdłuższy rząd (dla alejki)
         const max = Math.max(...seats.map(s => s.seatNumber));
         this.maxSeatsInRow.set(max);
 
-        // Grupujemy płaską listę po numerze rzędu
         const groupedMap = new Map<number, ScreeningSeatView[]>();
         seats.forEach(seat => {
           if (!groupedMap.has(seat.rowNumber)) {
@@ -70,14 +64,11 @@ export class SeatSelectionComponent implements OnInit {
           groupedMap.get(seat.rowNumber)!.push(seat);
         });
 
-        // Konwertujemy mapę na posortowaną tablicę rzędów
         const rowsArray = Array.from(groupedMap.entries())
           .map(([rowNumber, seats]) => ({
             rowNumber,
-            // Sortujemy miejsca wewnątrz rzędu od lewej do prawej
             seats: seats.sort((a, b) => a.seatNumber - b.seatNumber)
           }))
-          // Sortujemy rzędy od pierwszego do ostatniego
           .sort((a, b) => a.rowNumber - b.rowNumber);
 
         this.rows.set(rowsArray);
@@ -97,10 +88,8 @@ export class SeatSelectionComponent implements OnInit {
     const isAlreadySelected = currentSelected.find(s => s.id === seat.id);
 
     if (isAlreadySelected) {
-      // Odznaczamy
       this.selectedSeats.set(currentSelected.filter(s => s.id !== seat.id));
     } else {
-      // Zaznaczamy (limit to np. 10 biletów na transakcję)
       if (currentSelected.length < 10) {
         this.selectedSeats.set([...currentSelected, seat]);
       } else {
@@ -113,7 +102,6 @@ export class SeatSelectionComponent implements OnInit {
     return this.selectedSeats().some(s => s.id === seat.id);
   }
 
-  // Funkcja zwracająca 'true' dla miejsca, po którym ma być alejka (środek rzędu)
   isAisle(seatNumber: number): boolean {
     const half = Math.floor(this.maxSeatsInRow() / 2);
     return seatNumber === half;
@@ -132,10 +120,8 @@ export class SeatSelectionComponent implements OnInit {
       seatIds: seats.map(s => s.originalSeatId) 
     };
 
-    // Używamy nowego typu odpowiedzi
     this.ticketService.buyTicket(command).subscribe({
       next: (response: BuyTicketResponse) => {
-        // Z obiektu wyciągamy tylko sam uniqueCode!
         this.purchasedTicketCode.set(response.uniqueCode);
         this.isPurchasing.set(false);
       },

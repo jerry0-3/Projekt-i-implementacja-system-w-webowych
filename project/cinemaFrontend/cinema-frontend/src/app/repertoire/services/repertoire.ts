@@ -7,7 +7,6 @@ import { PagedRepertoireResponse, MovieDictionaryDto, ScreeningSeatView } from '
   providedIn: 'root'
 })
 export class RepertoireService {
-  // Dzięki proxy.conf.json, to zapytanie trafi prosto do portu 8081!
   private readonly BASE_API_URL = '/api/queries';
 
   public filterState = {

@@ -37,7 +37,6 @@ export class TicketScannerComponent {
       next: (details) => {
         this.ticketDetails.set(details);
         this.isLoading.set(false);
-        this.ticketCode.set(''); 
       },
       error: (err) => {
         console.error('Błąd skanowania', err);
@@ -55,6 +54,7 @@ export class TicketScannerComponent {
       next: () => {
         this.ticketCode.set(codeToCancel);
         this.scanTicket();
+        this.ticketCode.set(''); 
       },
       error: (err) => {
         this.errorMessage.set('Błąd podczas kasowania biletu.');

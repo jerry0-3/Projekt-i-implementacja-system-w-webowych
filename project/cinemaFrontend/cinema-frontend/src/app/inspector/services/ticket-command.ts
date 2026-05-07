@@ -16,6 +16,6 @@ export class TicketCommandService {
   }
 
   cancelTicket(uniqueCode: string): Observable<void> {
-    return this.http.post<void>(`${this.COMMAND_API_URL}/${uniqueCode}/cancel`, {});
+    return this.http.post<void>(`${this.COMMAND_API_URL}/${uniqueCode}/consume`, {});
   }
 }

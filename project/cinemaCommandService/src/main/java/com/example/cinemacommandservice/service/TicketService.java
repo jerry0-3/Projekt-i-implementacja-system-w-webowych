@@ -30,7 +30,6 @@ public class TicketService {
             throw new IllegalArgumentException("Musisz wybrać co najmniej jedno miejsce.");
         }
 
-        // Weryfikacja czy KTÓREKOLWIEK z wybranych miejsc nie jest już zajęte
         if (reservedSeatRepository.existsByScreeningIdAndSeatIdIn(screeningId, seatIds)) {
             throw new IllegalStateException("Jedno lub więcej z wybranych miejsc jest już zajęte.");
         }
@@ -49,7 +48,6 @@ public class TicketService {
                 .status(TicketStatus.VALID)
                 .build();
 
-        // Tworzenie i przypisywanie rezerwacji konkretnych foteli
         for (Seat seat : selectedSeats) {
             ReservedSeat reservedSeat = ReservedSeat.builder()
                     .screening(screening)
@@ -69,7 +67,6 @@ public class TicketService {
     public TicketDetailsResponse checkTicket(String uniqueCode) {
         Optional<Ticket> ticketOpt = ticketRepository.findByUniqueCodeWithDetails(uniqueCode);
 
-        // Stan: Nie istnieje
         if (ticketOpt.isEmpty()) {
             return new TicketDetailsResponse("NIE ISTNIEJE", null, null, null, null);
         }
@@ -101,20 +98,18 @@ public class TicketService {
         ticketRepository.save(ticket);
     }
 
-    // Prywatna metoda pomocnicza do wyliczania faktycznego stanu biletu w czasie rzeczywistym
     private String calculateDynamicStatus(Ticket ticket) {
         if (ticket.getStatus() == TicketStatus.SCANNED) {
             return "SKASOWANY";
         }
         if (ticket.getStatus() == TicketStatus.INVALID) {
-            return "NIEWAŻNY"; // Nieważny ze względu na anulowanie w systemie
+            return "NIEWAŻNY";
         }
 
         LocalDateTime now = LocalDateTime.now();
         LocalDateTime validFrom = ticket.getScreening().getStartTime().minusMinutes(15);
         LocalDateTime validTo = ticket.getScreening().getEndTime();
 
-        // Nieważny ze względu na czas
         if (now.isBefore(validFrom) || now.isAfter(validTo)) {
             return "NIEWAŻNY";
         }

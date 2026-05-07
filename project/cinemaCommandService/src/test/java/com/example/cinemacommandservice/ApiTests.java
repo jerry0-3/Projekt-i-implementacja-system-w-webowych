@@ -39,10 +39,6 @@ public class ApiTests {
     @Autowired
     private ObjectMapper objectMapper;
 
-    // ========================
-    // BUY TICKET
-    // ========================
-
     @Test
     void buyTicket_shouldReturn201AndResponse() throws Exception {
         BuyTicketRequest request = new BuyTicketRequest(1L, List.of(1L, 2L));
@@ -96,10 +92,6 @@ public class ApiTests {
                 .andExpect(status().isConflict());
     }
 
-    // ========================
-    // CHECK TICKET
-    // ========================
-
     @Test
     void checkTicket_shouldReturn200AndBody() throws Exception {
         TicketDetailsResponse response = new TicketDetailsResponse(
@@ -117,10 +109,6 @@ public class ApiTests {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.status").value("WAŻNY"));
     }
-
-    // ========================
-    // CONSUME TICKET
-    // ========================
 
     @Test
     void consumeTicket_shouldReturn200() throws Exception {

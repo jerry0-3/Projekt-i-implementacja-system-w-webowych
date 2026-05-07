@@ -43,10 +43,6 @@ public class ApiTests {
     @MockitoBean
     private SyncController syncController;
 
-    // ========================
-    // GET /repertoire
-    // ========================
-
     @Test
     void shouldReturnPagedRepertoire() throws Exception {
         // given
@@ -124,10 +120,6 @@ public class ApiTests {
                 .andExpect(jsonPath("$.page.totalElements").value(0));
     }
 
-    // ========================
-    // GET /screenings/{id}/seats
-    // ========================
-
     @Test
     void shouldReturnSeatsForScreening() throws Exception {
         // given
@@ -185,10 +177,6 @@ public class ApiTests {
                 .andExpect(status().isOk());
     }
 
-    // ========================
-    // HAPPY PATH
-    // ========================
-
     @Test
     void shouldSyncReservedSeatsSuccessfully() throws Exception {
         // given
@@ -207,10 +195,6 @@ public class ApiTests {
                 eq(new SyncReservationDto(1L, List.of(10L, 20L, 30L)))
         );
     }
-
-    // ========================
-    // EDGE CASES
-    // ========================
 
     @Test
     void shouldHandleEmptySeatList() throws Exception {
@@ -250,10 +234,6 @@ public class ApiTests {
         verify(syncController).syncReservedSeats(
                 eq(new SyncReservationDto(99L, seats)));
     }
-
-    // ========================
-    // VALIDATION / BAD REQUESTS
-    // ========================
 
     @Test
     void shouldReturn400WhenBodyIsMissing() throws Exception {

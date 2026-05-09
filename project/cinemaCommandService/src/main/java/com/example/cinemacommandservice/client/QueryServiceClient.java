@@ -15,7 +15,6 @@ public class QueryServiceClient {
 
     private final RestTemplate restTemplate;
 
-    // Adres, pod którym działa nasza aplikacja odczytowa
     private static final String QUERY_SERVICE_URL = "http://localhost:8081/api/internal/sync/reservation";
 
     public void syncReservedSeats(Long screeningId, List<Long> seatIds) {
@@ -24,7 +23,6 @@ public class QueryServiceClient {
         try {
             log.info("Próba synchronizacji rezerwacji dla seansu {} i miejsc {}", screeningId, seatIds);
 
-            // Wywołanie POST na endpoint w Query Service
             restTemplate.postForEntity(QUERY_SERVICE_URL, request, Void.class);
 
             log.info("Pomyślnie zsynchronizowano rezerwację z Query Service.");

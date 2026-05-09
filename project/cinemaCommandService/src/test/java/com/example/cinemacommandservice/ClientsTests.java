@@ -25,10 +25,6 @@ public class ClientsTests {
         MockitoAnnotations.openMocks(this);
     }
 
-    // ========================
-    // SUCCESS CASE
-    // ========================
-
     @Test
     void syncReservedSeats_shouldCallRestTemplate() {
         Long screeningId = 1L;
@@ -47,10 +43,6 @@ public class ClientsTests {
         );
     }
 
-    // ========================
-    // EXCEPTION HANDLING
-    // ========================
-
     @Test
     void syncReservedSeats_shouldNotThrow_whenRestTemplateFails() {
         Long screeningId = 1L;
@@ -65,10 +57,6 @@ public class ClientsTests {
 
         verify(restTemplate).postForEntity(anyString(), any(), eq(Void.class));
     }
-
-    // ========================
-    // EDGE CASES
-    // ========================
 
     @Test
     void syncReservedSeats_shouldHandleEmptySeatList() {

@@ -36,10 +36,6 @@ public class ServicesTests {
         pageable = PageRequest.of(0, 10);
     }
 
-    // ========================
-    // getRepertoire tests
-    // ========================
-
     @Test
     void shouldReturnFilteredRepertoire() {
         // given
@@ -79,10 +75,6 @@ public class ServicesTests {
         assertThat(result).isEmpty();
         verify(repertoireRepository).findFilteredRepertoire(null, null, pageable);
     }
-
-    // ========================
-    // getSeatsForScreening tests
-    // ========================
 
     @Test
     void shouldReturnSeatsForScreening() {
@@ -125,10 +117,6 @@ public class ServicesTests {
 
         verify(seatViewRepository).findByScreeningId(screeningId);
     }
-
-    // ========================
-    // syncReservedSeats tests
-    // ========================
 
     @Test
     void shouldSyncReservedSeatsSuccessfully() {

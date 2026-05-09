@@ -4,7 +4,7 @@
       "id": 1,
       "title": "Solaris123",
       "author": "Stanisław Lem",
-      "year": 1961,
+      "year": 2000,
       "description": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nam eu enim augue. Vestibulum sed hendrerit nisl. Sed ullamcorper tempor neque. "
     },
     {
@@ -58,6 +58,14 @@
       "rate": 5,
       "forBook": 1,
       "id": 4
+    },
+    {
+      "author": "Test",
+      "title": "Bad",
+      "description": "asdwd",
+      "rate": "1",
+      "forBook": 1,
+      "id": 5
     }
   ]
 }

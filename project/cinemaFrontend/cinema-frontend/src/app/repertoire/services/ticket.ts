@@ -7,7 +7,6 @@ export interface BuyTicketCommand {
   seatIds: number[];
 }
 
-// Dodajemy interfejs dla odpowiedzi z backendu
 export interface BuyTicketResponse {
   uniqueCode: string;
   message: string;
@@ -21,7 +20,6 @@ export class TicketService {
 
   constructor(private http: HttpClient) {}
 
-  // Zwracamy obiekt JSON zamiast stringa
   buyTicket(command: BuyTicketCommand): Observable<BuyTicketResponse> {
     return this.http.post<BuyTicketResponse>(this.COMMAND_API_URL, command);
   }

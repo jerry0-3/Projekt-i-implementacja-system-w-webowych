@@ -7,23 +7,18 @@ import { Observable, tap } from 'rxjs';
   providedIn: 'root'
 })
 export class AuthService {
-  // Nowoczesne wstrzykiwanie omijające potencjalne zapętlenia w konstruktorze
   private router = inject(Router);
   private http = inject(HttpClient);
 
-  // Inicjalizacja sygnału z bezpiecznym sprawdzeniem
   isLoggedIn = signal<boolean>(this.hasToken());
 
-  // Metoda zwraca Observable, by komponent logowania wiedział o wyniku
   login(username: string, pass: string): Observable<any> {
     const token = btoa(`${username}:${pass}`);
-    
-    // Tworzymy nagłówek ręcznie tylko na potrzeby tego jednego, testowego zapytania
+
     const headers = new HttpHeaders({ Authorization: `Basic ${token}` });
 
     return this.http.get('/api/commands/tickets/verify', { headers, responseType: 'text' }).pipe(
       tap(() => {
-        // Ten kod wykona się tylko jeśli backend przepuści zapytanie (hasło jest dobre)
         if (typeof window !== 'undefined') {
           localStorage.setItem('inspector_token', token);
         }

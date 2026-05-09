@@ -53,10 +53,6 @@ class ServicesTests {
         seat2 = Seat.builder().id(2L).rowNumber(1).seatNumber(2).room(room).build();
     }
 
-    // ========================
-    // BUY TICKET
-    // ========================
-
     @Test
     void buyTicket_shouldSucceed() {
         List<Long> seatIds = List.of(1L, 2L);
@@ -118,10 +114,6 @@ class ServicesTests {
                 () -> ticketService.buyTicket(1L, seatIds));
     }
 
-    // ========================
-    // CHECK TICKET
-    // ========================
-
     @Test
     void checkTicket_shouldReturnNotExists() {
         when(ticketRepository.findByUniqueCodeWithDetails("code"))
@@ -173,10 +165,6 @@ class ServicesTests {
         assertEquals("NIEWAŻNY", response.status());
     }
 
-    // ========================
-    // CONSUME TICKET
-    // ========================
-
     @Test
     void consumeTicket_shouldSucceed() {
         Ticket ticket = buildTicket(TicketStatus.VALID);
@@ -222,10 +210,6 @@ class ServicesTests {
         assertThrows(IllegalStateException.class,
                 () -> ticketService.consumeTicket("code"));
     }
-
-    // ========================
-    // HELPER
-    // ========================
 
     private Ticket buildTicket(TicketStatus status) {
         Ticket ticket = Ticket.builder()

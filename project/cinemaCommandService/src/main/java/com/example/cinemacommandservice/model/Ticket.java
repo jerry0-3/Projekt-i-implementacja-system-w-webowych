@@ -7,7 +7,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Entity
-// KLUCZOWE: Zapobiega kupieniu dwóch biletów na to samo miejsce na ten sam seans
 @Table(name = "tickets", uniqueConstraints = {
         @UniqueConstraint(columnNames = {"screening_id", "seat_id"})
 })
@@ -32,11 +31,9 @@ public class Ticket {
     @Column(nullable = false)
     private TicketStatus status;
 
-    // Optimistic Locking — zapobiega jednoczesnej modyfikacji (np. podwójnemu skasowaniu)
     @Version
     private Long version;
 
-    // Metoda pomocnicza do dodawania miejsc, aby zachować spójność relacji dwukierunkowej
     public void addReservedSeat(ReservedSeat reservedSeat) {
         reservedSeats.add(reservedSeat);
         reservedSeat.setTicket(this);

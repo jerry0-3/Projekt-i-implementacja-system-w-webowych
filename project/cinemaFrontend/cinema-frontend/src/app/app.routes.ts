@@ -5,7 +5,6 @@ import { LoginComponent } from './inspector/components/login/login';
 import { TicketScannerComponent } from './inspector/components/ticket-scanner/ticket-scanner';
 
 export const routes: Routes = [
-  // Przekierowanie ze ścieżki głównej bezpośrednio do repertuaru
   { path: '', redirectTo: 'repertoire', pathMatch: 'full' },
   { path: 'repertoire', component: RepertoireListComponent },
   { path: 'repertoire/seats/:id', component: SeatSelectionComponent },

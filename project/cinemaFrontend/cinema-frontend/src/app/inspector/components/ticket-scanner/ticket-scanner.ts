@@ -13,10 +13,8 @@ import { AuthService } from '../../services/auth';
   styleUrls: ['./ticket-scanner.scss']
 })
 export class TicketScannerComponent {
-  // Wpisany przez biletera kod
   ticketCode = signal<string>('');
-  
-  // Zwrócone z backendu szczegóły
+
   ticketDetails = signal<TicketDetailsResponse | null>(null);
   
   errorMessage = signal<string>('');
@@ -39,12 +37,9 @@ export class TicketScannerComponent {
       next: (details) => {
         this.ticketDetails.set(details);
         this.isLoading.set(false);
-        // Czyścimy pole wejściowe po udanym skanie
-        this.ticketCode.set(''); 
       },
       error: (err) => {
         console.error('Błąd skanowania', err);
-        // Jeśli backend rzuci np. 404
         this.errorMessage.set('Nie znaleziono biletu o podanym kodzie.');
         this.isLoading.set(false);
       }
@@ -57,9 +52,9 @@ export class TicketScannerComponent {
     this.isLoading.set(true);
     this.ticketService.cancelTicket(codeToCancel).subscribe({
       next: () => {
-        // Po pomyślnym skasowaniu odświeżamy widok, skanując go jeszcze raz
         this.ticketCode.set(codeToCancel);
         this.scanTicket();
+        this.ticketCode.set(''); 
       },
       error: (err) => {
         this.errorMessage.set('Błąd podczas kasowania biletu.');

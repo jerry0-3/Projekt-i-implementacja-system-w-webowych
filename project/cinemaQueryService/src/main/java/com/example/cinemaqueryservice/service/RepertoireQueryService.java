@@ -42,7 +42,6 @@ public class RepertoireQueryService {
         return repertoireRepository.findDistinctRooms();
     }
 
-    // Metoda wywoływana TYLKO przez wewnętrzny endpoint synchronizacyjny
     @Transactional
     public void syncReservedSeats(Long screeningId, List<Long> seatIds) {
         int updatedRows = seatViewRepository.markSeatsAsOccupied(screeningId, seatIds);

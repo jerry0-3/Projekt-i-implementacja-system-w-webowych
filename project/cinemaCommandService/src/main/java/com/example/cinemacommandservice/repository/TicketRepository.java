@@ -8,7 +8,6 @@ import java.util.Optional;
 
 public interface TicketRepository extends JpaRepository<Ticket, Long> {
 
-    // Używamy JOIN FETCH dla reservedSeats i ich seat, aby uniknąć problemu N+1
     @Query("SELECT DISTINCT t FROM Ticket t " +
             "JOIN FETCH t.screening s " +
             "JOIN FETCH t.reservedSeats rs " +

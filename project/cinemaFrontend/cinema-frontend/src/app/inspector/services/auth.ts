@@ -15,7 +15,10 @@ export class AuthService {
   login(username: string, pass: string): Observable<any> {
     const token = btoa(`${username}:${pass}`);
 
-    const headers = new HttpHeaders({ Authorization: `Basic ${token}` });
+    const headers = new HttpHeaders({ 
+      Authorization: `Basic ${token}`,
+      'X-Requested-With': 'XMLHttpRequest' 
+    });
 
     return this.http.get('/api/commands/tickets/verify', { headers, responseType: 'text' }).pipe(
       tap(() => {

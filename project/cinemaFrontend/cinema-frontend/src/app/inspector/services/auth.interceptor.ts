@@ -19,10 +19,13 @@ export const authInterceptor: HttpInterceptorFn = (req, next) => {
   return next(req).pipe(
     catchError((error: HttpErrorResponse) => {
       if (error.status === 401) {
-        authService.logout();
-        
-        if (typeof window !== 'undefined' && !req.url.includes('/verify')) {
-          alert('Sesja wygasła lub podano błędne dane logowania.');
+        const isLoginAttempt = req.url.includes('/verify');
+
+        if (!isLoginAttempt) {
+          authService.logout();
+          if (typeof window !== 'undefined') {
+            alert('Sesja wygasła lub podano błędne dane logowania.');
+          }
         }
       }
       return throwError(() => error);

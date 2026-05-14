@@ -3,8 +3,8 @@ import { CommonModule } from '@angular/common';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { QRCodeComponent } from 'angularx-qrcode';
 import { RepertoireService } from '../../services/repertoire';
-import { TicketService, BuyTicketCommand, BuyTicketResponse } from '../../services/ticket';
-import { ScreeningSeatView } from '../../model/repertoire.model';
+import { TicketService } from '../../services/ticket';
+import { ScreeningSeatView, BuyTicketCommand, BuyTicketResponse  } from '../../model/repertoire.model';
 
 interface SeatRow {
   rowNumber: number;

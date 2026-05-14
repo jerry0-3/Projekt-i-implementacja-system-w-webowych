@@ -9,11 +9,9 @@ import {
   it
 } from 'vitest';
 
-import {
-  TicketService,
-  BuyTicketCommand,
-  BuyTicketResponse
-} from './ticket';
+import { TicketService, } from './ticket';
+
+import { BuyTicketCommand, BuyTicketResponse  } from '../model/repertoire.model';
 
 describe('TicketService', () => {
   let service: TicketService;

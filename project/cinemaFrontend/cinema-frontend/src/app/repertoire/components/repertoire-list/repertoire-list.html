@@ -1,7 +1,6 @@
 <div class="repertoire-container">
     <h2>Repertuar Kina</h2>
   
-    <!-- PASEK FILTRÓW -->
     <div class="filters-bar">
       <div class="filter-group">
         <label for="movieFilter">Wybierz film:</label>
@@ -60,7 +59,6 @@
         }
       </div>
   
-      <!-- ROZBUDOWANA PAGINACJA -->
       @if (totalPages() > 1) {
         <div class="pagination">
           <button (click)="firstPage()" [disabled]="currentPage() === 0">Pierwsza</button>

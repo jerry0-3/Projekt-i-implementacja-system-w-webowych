@@ -7,7 +7,6 @@
     }
 </div>
 
-<!-- EKRAN SUKCESU -->
 @if (purchasedTicketCode()) {
     <div class="success-screen">
         <div class="success-icon">🎫</div>
@@ -31,7 +30,6 @@
     </div>
 } 
 
-<!-- EKRAN ŁADOWANIA LUB WYBORU MIEJSC -->
 @else {
     @if (isLoading()) {
         <div class="loading">Wczytywanie układu sali...</div>
@@ -89,7 +87,6 @@
                 }
                 </p>
             </div>
-            <!-- Aktualizacja przycisku -->
             <button class="btn-buy" (click)="buyTickets()" [disabled]="isPurchasing()">
                 {{ isPurchasing() ? 'Przetwarzanie...' : 'Kup Bilety' }}
             </button>

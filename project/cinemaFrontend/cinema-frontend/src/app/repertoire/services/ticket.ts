@@ -2,15 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 
-export interface BuyTicketCommand {
-  screeningId: number;
-  seatIds: number[];
-}
-
-export interface BuyTicketResponse {
-  uniqueCode: string;
-  message: string;
-}
+import { BuyTicketCommand, BuyTicketResponse  } from '../model/repertoire.model';
 
 @Injectable({
   providedIn: 'root'

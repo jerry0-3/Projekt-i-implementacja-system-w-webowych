@@ -32,11 +32,8 @@ describe('AuthService + authInterceptor', () => {
     TestBed.configureTestingModule({
       providers: [
         AuthService,
-
-        // Router mock
         { provide: Router, useValue: router },
 
-        // Modern HttpClient setup (REQUIRED for interceptor + testing)
         provideHttpClient(withInterceptors([authInterceptor])),
         provideHttpClientTesting()
       ]
@@ -59,9 +56,6 @@ describe('AuthService + authInterceptor', () => {
     expect(service).toBeTruthy();
   });
 
-  // -----------------------------
-  // AUTH SERVICE LOGIN
-  // -----------------------------
   describe('login()', () => {
     it('should send request with Basic auth + X-Requested-With headers', () => {
       service.login('john', 'secret').subscribe();
@@ -99,9 +93,6 @@ describe('AuthService + authInterceptor', () => {
     });
   });
 
-  // -----------------------------
-  // INTERCEPTOR BEHAVIOR
-  // -----------------------------
   describe('authInterceptor', () => {
     it('should attach token from localStorage to API requests', () => {
       const token = 'my-token';
@@ -179,9 +170,6 @@ describe('AuthService + authInterceptor', () => {
     });
   });
 
-  // -----------------------------
-  // LOGOUT
-  // -----------------------------
   describe('logout()', () => {
     it('should clear token and navigate to login', () => {
       localStorage.setItem('inspector_token', 'token');
@@ -197,9 +185,6 @@ describe('AuthService + authInterceptor', () => {
     });
   });
 
-  // -----------------------------
-  // GET TOKEN
-  // -----------------------------
   describe('getToken()', () => {
     it('should return token from localStorage', () => {
       localStorage.setItem('inspector_token', 'abc');

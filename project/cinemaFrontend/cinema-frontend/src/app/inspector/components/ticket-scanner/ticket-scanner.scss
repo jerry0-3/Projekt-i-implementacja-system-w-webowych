@@ -82,10 +82,9 @@
       color: white;
     }
   
-    /* Style bazujące na statusie biletu z backendu */
-    &.ważny .status-banner { background-color: #4CAF50; } // Zielony
-    &.skasowany .status-banner { background-color: #777; }  // Szary
-    &.nieważny .status-banner { background-color: #e50914; } // Czerwony
+    &.ważny .status-banner { background-color: #4CAF50; }
+    &.skasowany .status-banner { background-color: #777; }
+    &.nieważny .status-banner { background-color: #e50914; }
   
     .ticket-info {
       padding: 2rem;

@@ -35,3 +35,13 @@ export interface RepertoireView {
     id: number;
     title: string;
   }
+
+  export interface BuyTicketCommand {
+    screeningId: number;
+    seatIds: number[];
+  }
+  
+  export interface BuyTicketResponse {
+    uniqueCode: string;
+    message: string;
+  }

@@ -5,7 +5,6 @@
       <button class="btn-logout" (click)="logout()">Wyloguj się</button>
     </div>
   
-    <!-- Sekcja wprowadzania kodu -->
     <div class="search-box">
       <input 
         type="text" 
@@ -24,7 +23,6 @@
       </div>
     }
   
-    <!-- Wynik Skanowania -->
     @if (ticketDetails(); as details) {
       <div class="ticket-card" [ngClass]="details.status.toLowerCase()">
         <div class="status-banner">

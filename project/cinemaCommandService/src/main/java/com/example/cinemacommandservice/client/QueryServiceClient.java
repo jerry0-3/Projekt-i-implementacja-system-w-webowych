@@ -15,7 +15,9 @@ public class QueryServiceClient {
 
     private final RestTemplate restTemplate;
 
-    private static final String QUERY_SERVICE_URL = "http://localhost:8081/api/internal/sync/reservation";
+    // private static final String QUERY_SERVICE_URL = "http://localhost:8081/api/internal/sync/reservation";
+    @org.springframework.beans.factory.annotation.Value("${query.service.url:http://localhost:8081/api/internal/sync/reservation}")
+    private String queryServiceUrl;
 
     public void syncReservedSeats(Long screeningId, List<Long> seatIds) {
         SyncReservationDto request = new SyncReservationDto(screeningId, seatIds);
@@ -23,7 +25,7 @@ public class QueryServiceClient {
         try {
             log.info("Próba synchronizacji rezerwacji dla seansu {} i miejsc {}", screeningId, seatIds);
 
-            restTemplate.postForEntity(QUERY_SERVICE_URL, request, Void.class);
+            restTemplate.postForEntity(queryServiceUrl, request, Void.class);
 
             log.info("Pomyślnie zsynchronizowano rezerwację z Query Service.");
         } catch (Exception e) {
